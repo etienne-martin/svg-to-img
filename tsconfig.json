@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2017",
+      "strict": true,
+      "declaration": true,
+      "noImplicitAny": true,
+      "outDir": "./dist",
+      "lib": [
+        "dom",
+        "es2017"
+      ]
+    },
+    "include": [
+      "src/**/*"
+    ]
+  }

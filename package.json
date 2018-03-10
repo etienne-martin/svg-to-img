@@ -26,6 +26,6 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "node": "^9.8.0"
+    "puppeteer": "^1.1.1"
   }
 }

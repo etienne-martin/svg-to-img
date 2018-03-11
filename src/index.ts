@@ -1,17 +1,11 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
+import { defaultOptions} from "./constants";
 import { getFileTypeFromPath, getSvgNaturalDimensions, injectSvgInPage } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
 let browserInstance: puppeteer.Browser | undefined;
-
-const defaultOptions: IOptions = {
-  fullPage: true,
-  omitBackground: true,
-  quality: 100,
-  type: "png"
-};
 
 const getBrowser = async () => {
   clearTimeout(browserDestructionTimeout);
@@ -30,10 +24,9 @@ const scheduleBrowserForDestruction = () => {
 };
 
 const to = (input: Buffer | string) => {
-  // Convert buffer to string
-  const svg = Buffer.isBuffer(input) ? (input as Buffer).toString("utf8") : input;
-
   return async (output: IOptions) => {
+    // Convert buffer to string
+    const svg = Buffer.isBuffer(input) ? (input as Buffer).toString("utf8") : input;
     const screenshotOptions = {...defaultOptions, ...output};
     const browser = await getBrowser();
     const page = await browser.newPage();
@@ -84,7 +77,7 @@ const to = (input: Buffer | string) => {
 
     const screenshot = await page.screenshot(screenshotOptions);
 
-    await page.close();
+    page.close(); // Close tab asynchronously (no await)
     scheduleBrowserForDestruction();
 
     if (screenshotOptions.encoding) {

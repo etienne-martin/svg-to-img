@@ -1,15 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = require("puppeteer");
+const constants_1 = require("./constants");
 const helpers_1 = require("./helpers");
 let browserDestructionTimeout; // TODO: add proper typing
 let browserInstance;
-const defaultOptions = {
-    fullPage: true,
-    omitBackground: true,
-    quality: 100,
-    type: "png"
-};
 const getBrowser = async () => {
     clearTimeout(browserDestructionTimeout);
     return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch());
@@ -24,10 +19,10 @@ const scheduleBrowserForDestruction = () => {
     }, 1000);
 };
 const to = (input) => {
-    // Convert buffer to string
-    const svg = Buffer.isBuffer(input) ? input.toString("utf8") : input;
     return async (output) => {
-        const screenshotOptions = Object.assign({}, defaultOptions, output);
+        // Convert buffer to string
+        const svg = Buffer.isBuffer(input) ? input.toString("utf8") : input;
+        const screenshotOptions = Object.assign({}, constants_1.defaultOptions, output);
         const browser = await getBrowser();
         const page = await browser.newPage();
         // Get the natural dimensions of the SVG if they were not specified
@@ -65,7 +60,7 @@ const to = (input) => {
         }
         console.log(screenshotOptions);
         const screenshot = await page.screenshot(screenshotOptions);
-        await page.close();
+        page.close(); // Close tab asynchronously (no await)
         scheduleBrowserForDestruction();
         if (screenshotOptions.encoding) {
             return screenshot.toString(screenshotOptions.encoding);

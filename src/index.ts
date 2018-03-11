@@ -1,5 +1,6 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
+import { getFileTypeFromPath, getSvgNaturalDimensions, injectSvgInPage } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -7,11 +8,9 @@ let browserInstance: puppeteer.Browser | undefined;
 
 const defaultOptions: IOptions = {
   fullPage: true,
-  height: "auto",
   omitBackground: true,
   quality: 100,
-  type: "png",
-  width: "auto"
+  type: "png"
 };
 
 const getBrowser = async () => {
@@ -30,45 +29,26 @@ const scheduleBrowserForDestruction = () => {
   }, 1000);
 };
 
-const getFileTypeFromPath = (path: string) => {
-  return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
-};
-
-const injectSvgInPage = async (input: string, page: puppeteer.Page, size: {
-  width: IOptions["width"],
-  height: IOptions["height"]
-}) => {
-  await page.evaluate((svg, width, height) => {
-    const img = document.createElement("img");
-    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf8" });
-
-    img.style.width = width;
-    img.style.height = height;
-    img.src = URL.createObjectURL(blob);
-
-    document.body.appendChild(img);
-  }, input, size.width, size.height);
-};
-
 const to = (input: Buffer | string) => {
   // Convert buffer to string
-  if (Buffer.isBuffer(input)) {
-    input = (input as Buffer).toString("utf8");
-  }
+  const svg = Buffer.isBuffer(input) ? (input as Buffer).toString("utf8") : input;
 
   return async (output: IOptions) => {
     const screenshotOptions = {...defaultOptions, ...output};
     const browser = await getBrowser();
     const page = await browser.newPage();
 
-    await page.setJavaScriptEnabled(false);
-    await page.setOfflineMode(true);
-    await injectSvgInPage(input as string, page, {
-      height: screenshotOptions.height,
-      width: screenshotOptions.width
-    });
+    // Get the natural dimensions of the SVG if they were not specified
+    if (!screenshotOptions.width && !screenshotOptions.height) {
+      const naturalDimensions = await page.evaluate(getSvgNaturalDimensions, svg);
 
-    // await page.setViewport({ height: 1, width: 1 });
+      screenshotOptions.width = naturalDimensions.width;
+      screenshotOptions.height = naturalDimensions.height;
+    }
+
+    await page.setOfflineMode(true);
+    await page.setViewport({ height: 1, width: 1 });
+    await page.evaluate(injectSvgInPage, svg, screenshotOptions.width, screenshotOptions.height);
 
     // Infer the file type from the file path
     if (!output.type && screenshotOptions.path) {

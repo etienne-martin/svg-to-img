@@ -20,6 +20,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/puppeteer": "^1.1.0",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-eslint-rules": "^4.1.1",

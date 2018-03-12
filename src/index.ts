@@ -44,7 +44,7 @@ const to = (input: Buffer | string) => {
     await page.setViewport({ height: 1, width: 1 });
     await page.evaluate(convertFunctionToString(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
 
-    // Infer the file type from the file path
+    // Infer the file type from the file path if the type is not provided
     if (!output.type && screenshotOptions.path) {
       const fileType = getFileTypeFromPath(screenshotOptions.path);
 

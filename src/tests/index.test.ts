@@ -7,6 +7,7 @@ import * as sizeOf from "image-size";
 const inputDir = "./src/tests/svg";
 const outputDir = "./src/tests/img";
 const svgBuffer = fs.readFileSync(`${inputDir}/camera.svg`);
+const responsiveSvgBuffer = fs.readFileSync(`${inputDir}/logo.svg`);
 const svgString = svgBuffer.toString("utf8");
 
 // Create output directory
@@ -118,6 +119,48 @@ describe("SVG to image conversion", () => {
     } catch (error) {
       expect(error.message).toContain("Error: Malformed SVG");
     }
+  });
+
+  test("Responsive SVG (Natural dimensions)", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).to({
+      path: `${outputDir}/logo.png`
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 187,
+      height: 150
+    });
+    expect(md5(data)).toEqual("e6a2add8e60d48ad5163c13e3889bb5d");
+  });
+
+  test("Resize responsive SVG (Squashed)", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).to({
+      path: `${outputDir}/logo-resized-squashed.png`,
+      width: 300,
+      height: 100
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 300,
+      height: 100
+    });
+    expect(md5(data)).toEqual("4dcd300b271bb33172af00383e20d420");
+  });
+
+  test("Resize responsive SVG (Proportionally)", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).to({
+      path: `${outputDir}/logo-resized-proportionally.png`,
+      width: 300
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 300,
+      height: 241
+    });
+    expect(md5(data)).toEqual("40bd56d9e947ce0df2aa4493a23ceef9");
   });
 });
 

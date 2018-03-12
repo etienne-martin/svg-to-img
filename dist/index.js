@@ -12,6 +12,7 @@ const getBrowser = async () => {
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
     browserDestructionTimeout = setTimeout(async () => {
+        /* istanbul ignore next */
         if (browserInstance) {
             browserInstance.close();
             browserInstance = undefined;
@@ -27,14 +28,14 @@ const to = (input) => {
         const page = await browser.newPage();
         // Get the natural dimensions of the SVG if they were not specified
         if (!screenshotOptions.width && !screenshotOptions.height) {
-            const naturalDimensions = await page.evaluate(helpers_1.getSvgNaturalDimensions, svg);
+            const naturalDimensions = await page.evaluate(helpers_1.convertFunctionToString(helpers_1.getSvgNaturalDimensions, svg));
             screenshotOptions.width = naturalDimensions.width;
             screenshotOptions.height = naturalDimensions.height;
         }
         await page.setOfflineMode(true);
         await page.setViewport({ height: 1, width: 1 });
-        await page.evaluate(helpers_1.injectSvgInPage, svg, screenshotOptions.width, screenshotOptions.height);
-        // Infer the file type from the file path
+        await page.evaluate(helpers_1.convertFunctionToString(helpers_1.embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
+        // Infer the file type from the file path if the type is not provided
         if (!output.type && screenshotOptions.path) {
             const fileType = helpers_1.getFileTypeFromPath(screenshotOptions.path);
             if (["jpeg", "png"].includes(fileType)) {
@@ -44,21 +45,20 @@ const to = (input) => {
         if (screenshotOptions.type === "png") {
             delete screenshotOptions.quality;
         }
-        await page.evaluate(() => {
-            document.body.style.margin = "0px";
-            document.body.style.padding = "0px";
-        });
+        await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "body", {
+            margin: "0px",
+            padding: "0px"
+        }));
         if (screenshotOptions.type === "jpeg") {
-            await page.evaluate(() => {
-                document.documentElement.style.background = "#fff";
-            });
+            await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "html", {
+                background: "#fff"
+            }));
         }
         if (screenshotOptions.background) {
-            await page.evaluate(background => {
-                document.body.style.background = background;
-            }, screenshotOptions.background);
+            await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "body", {
+                background: screenshotOptions.background
+            }));
         }
-        console.log(screenshotOptions);
         const screenshot = await page.screenshot(screenshotOptions);
         page.close(); // Close tab asynchronously (no await)
         scheduleBrowserForDestruction();

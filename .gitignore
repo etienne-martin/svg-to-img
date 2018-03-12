@@ -58,4 +58,5 @@ jspm_packages/
 .idea
 
 # Ignore test-generated images
-/src/tests/img/*
+src/tests/img/*
+dist/tests/

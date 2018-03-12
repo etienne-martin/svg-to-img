@@ -20,8 +20,6 @@ Caution: svg-to-img uses async/await which is only supported in Node v7.6.0 or g
 
 **Example** - converting a svg to png and saving the image as *example.png*:
 
-Save file as **example.js**
-
 ```javascript
 const svgToImg = require("svg-to-img");
 
@@ -32,15 +30,7 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-Execute script on the command line
-
-```
-node example.js
-```
-
 **Example** - resizing a svg proportionally and converting it to png:
-
-Save file as **resize.js**
 
 ```javascript
 const svgToImg = require("svg-to-img");
@@ -54,15 +44,7 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-Execute script on the command line
-
-```
-node resize.js
-```
-
 **Example** - converting a svg to base64-encoded png:
-
-Save file as **base64.js**
 
 ```javascript
 const svgToImg = require("svg-to-img");
@@ -74,12 +56,6 @@ const svgToImg = require("svg-to-img");
   
   console.log(image);
 })();
-```
-
-Execute script on the command line
-
-```
-node base64.js
 ```
 
 ## API Documentation

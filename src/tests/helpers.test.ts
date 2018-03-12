@@ -7,6 +7,20 @@ Object.defineProperty(URL, "createObjectURL", {
   })
 });
 
+Object.defineProperty(HTMLImageElement.prototype, "naturalHeight", {
+  writable: true,
+  value: 10
+});
+
+Object.defineProperty(HTMLImageElement.prototype, "naturalWidth", {
+  writable: true,
+  value: 10
+});
+
+Element.prototype.addEventListener = jest.fn((event, callback) => {
+  setTimeout(callback, 100);
+});
+
 describe("Helpers", () => {
   test("Get file type from path", async () => {
     const fileType = await getFileTypeFromPath("test.jpg");
@@ -15,9 +29,9 @@ describe("Helpers", () => {
   });
 
   test("Get SVG natural dimensions", async () => {
-    await getSvgNaturalDimensions("<svg/>");
+    const dimensions = await getSvgNaturalDimensions("<svg/>");
 
-    expect(1).toEqual(1);
+    expect(dimensions).toEqual({ height: 10, width: 10 });
   });
 
   test("Embed svg in body", async () => {

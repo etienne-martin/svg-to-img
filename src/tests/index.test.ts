@@ -98,7 +98,7 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("ce65eea472df3b38bae00d9e5e6e8f0d");
   });
 
-  test("Custom background", async () => {
+  test("Custom background color", async () => {
     const data = await svgToImg.from(svgString).to({
       background: "#09f"
     });
@@ -111,7 +111,7 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("481c7be3721221d3e0a00f9878203961");
   });
 
-  test("Invalid SVG", async () => {
+  test("Malformed SVG", async () => {
     try {
       await svgToImg.from("THIS IS NO SVG").to({
         type: "png"
@@ -121,9 +121,9 @@ describe("SVG to image conversion", () => {
     }
   });
 
-  test("Responsive SVG (Natural dimensions)", async () => {
+  test("Responsive SVG (Infer natural dimensions)", async () => {
     const data = await svgToImg.from(responsiveSvgBuffer).to({
-      path: `${outputDir}/logo.png`
+      type: "png"
     });
 
     expect(sizeOf(data as Buffer)).toEqual({
@@ -136,7 +136,6 @@ describe("SVG to image conversion", () => {
 
   test("Resize responsive SVG (Squashed)", async () => {
     const data = await svgToImg.from(responsiveSvgBuffer).to({
-      path: `${outputDir}/logo-resized-squashed.png`,
       width: 300,
       height: 100
     });
@@ -151,7 +150,6 @@ describe("SVG to image conversion", () => {
 
   test("Resize responsive SVG (Proportionally)", async () => {
     const data = await svgToImg.from(responsiveSvgBuffer).to({
-      path: `${outputDir}/logo-resized-proportionally.png`,
       width: 300
     });
 

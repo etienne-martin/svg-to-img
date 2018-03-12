@@ -30,6 +30,7 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
 
   const svg = sandbox.querySelector("svg");
 
+  /* istanbul ignore if  */
   if (!svg) { return; }
 
   svg.setAttribute("preserveAspectRatio", "none");
@@ -41,4 +42,15 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
   img.src = URL.createObjectURL(blob);
 
   document.body.appendChild(img);
+};
+
+export const convertFunctionToString = (func: any, ...argsArray: any[]) => {
+  const args = "`" + argsArray.join("`,`") + "`";
+  let functionString = func.toString();
+
+  // Remove istanbul coverage instruments
+  functionString = functionString.replace(/cov_(.+?)\+\+,?/g, "");
+  functionString = functionString.replace(/cov_(.+?)\+\+;?/g, "");
+
+  return `(${functionString})(${args})`;
 };

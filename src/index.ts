@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
 import { defaultOptions} from "./constants";
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody } from "./helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, convertFunctionToString } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -16,6 +16,7 @@ const getBrowser = async () => {
 const scheduleBrowserForDestruction = () => {
   clearTimeout(browserDestructionTimeout);
   browserDestructionTimeout = setTimeout(async () => {
+    /* istanbul ignore next */
     if (browserInstance) {
       browserInstance.close();
       browserInstance = undefined;
@@ -33,7 +34,7 @@ const to = (input: Buffer | string) => {
 
     // Get the natural dimensions of the SVG if they were not specified
     if (!screenshotOptions.width && !screenshotOptions.height) {
-      const naturalDimensions = await page.evaluate(getSvgNaturalDimensions, svg);
+      const naturalDimensions = await page.evaluate(convertFunctionToString(getSvgNaturalDimensions, svg));
 
       screenshotOptions.width = naturalDimensions.width;
       screenshotOptions.height = naturalDimensions.height;
@@ -41,7 +42,7 @@ const to = (input: Buffer | string) => {
 
     await page.setOfflineMode(true);
     await page.setViewport({ height: 1, width: 1 });
-    await page.evaluate(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height);
+    await page.evaluate(convertFunctionToString(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
 
     // Infer the file type from the file path
     if (!output.type && screenshotOptions.path) {
@@ -56,24 +57,25 @@ const to = (input: Buffer | string) => {
       delete screenshotOptions.quality;
     }
 
+    /* istanbul ignore next */
     await page.evaluate(() => {
       document.body.style.margin = "0px";
       document.body.style.padding = "0px";
     });
 
     if (screenshotOptions.type === "jpeg") {
+      /* istanbul ignore next */
       await page.evaluate(() => {
         document.documentElement.style.background = "#fff";
       });
     }
 
     if (screenshotOptions.background) {
+      /* istanbul ignore next */
       await page.evaluate(background => {
         document.body.style.background = background;
       }, screenshotOptions.background);
     }
-
-    console.log(screenshotOptions);
 
     const screenshot = await page.screenshot(screenshotOptions);
 

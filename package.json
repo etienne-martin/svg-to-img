@@ -1,6 +1,6 @@
 {
   "name": "svg-to-img",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A node.js library to convert SVGs to images built with Puppeteer.",
   "homepage": "https://github.com/etienne-martin/svg-to-img",
   "keywords": [
@@ -15,8 +15,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
-    "name" : "Etienne Martin",
-    "url" : "http://etiennemartin.ca/"
+    "name": "Etienne Martin",
+    "url": "http://etiennemartin.ca/"
   },
   "scripts": {
     "dev": "tsc --pretty --watch",

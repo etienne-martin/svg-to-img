@@ -49,8 +49,7 @@ export const convertFunctionToString = (func: any, ...argsArray: any[]) => {
   let functionString = func.toString();
 
   // Remove istanbul coverage instruments
-  functionString = functionString.replace(/cov_(.+?)\+\+,?/g, "");
-  functionString = functionString.replace(/cov_(.+?)\+\+;?/g, "");
+  functionString = functionString.replace(/cov_(.+?)\+\+[,;]?/g, "");
 
   return `(${functionString})(${args})`;
 };

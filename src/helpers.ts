@@ -15,7 +15,7 @@ export const getSvgNaturalDimensions = async (svg: string) => {
     });
 
     img.addEventListener("error", (error) => {
-      reject(error);
+      reject(new Error("Malformed SVG"));
     });
 
     img.src = URL.createObjectURL(blob);

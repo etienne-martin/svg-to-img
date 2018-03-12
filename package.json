@@ -1,6 +1,6 @@
 {
   "name": "svg-to-img",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Convert SVGs to images",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

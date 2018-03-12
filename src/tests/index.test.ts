@@ -116,7 +116,10 @@ describe("SVG to image conversion", () => {
         type: "png"
       });
     } catch (error) {
-      expect(error.toString()).toEqual("Error: Malformed SVG");
+      expect(error.message).toContain("Error: Malformed SVG");
     }
   });
 });
+
+// Kill any remaining Chromium instances
+// pkill -f Chromium

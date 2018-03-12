@@ -14,7 +14,7 @@ export const getSvgNaturalDimensions = async (svg: string) => {
       });
     });
 
-    img.addEventListener("error", (error) => {
+    img.addEventListener("error", () => {
       reject(new Error("Malformed SVG"));
     });
 
@@ -23,25 +23,35 @@ export const getSvgNaturalDimensions = async (svg: string) => {
 };
 
 export const embedSvgInBody = async (rawSvg: string, width: string, height: string) => {
-  const img = new Image();
-  const sandbox = document.createElement("div");
+  return new Promise((resolve, reject) => {
+    const sandbox = document.createElement("div");
 
-  sandbox.innerHTML = rawSvg;
+    sandbox.innerHTML = rawSvg;
 
-  const svg = sandbox.querySelector("svg");
+    const svg = sandbox.querySelector("svg");
 
-  /* istanbul ignore if  */
-  if (!svg) { return; }
+    /* istanbul ignore if  */
+    if (!svg) { return; }
 
-  svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("preserveAspectRatio", "none");
 
-  const blob = new Blob([sandbox.innerHTML], { type: "image/svg+xml;charset=utf8" });
+    const img = new Image();
+    const blob = new Blob([sandbox.innerHTML], { type: "image/svg+xml;charset=utf8" });
 
-  img.style.width = width;
-  img.style.height = height;
-  img.src = URL.createObjectURL(blob);
+    img.style.width = width;
+    img.style.height = height;
+    img.src = URL.createObjectURL(blob);
 
-  document.body.appendChild(img);
+    img.addEventListener("load", () => {
+      resolve();
+    });
+
+    img.addEventListener("error", () => {
+      reject(new Error("Malformed SVG"));
+    });
+
+    document.body.appendChild(img);
+  });
 };
 
 export const convertFunctionToString = (func: any, ...argsArray: any[]) => {

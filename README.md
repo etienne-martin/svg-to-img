@@ -26,7 +26,7 @@ Save file as **example.js**
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  await svgToImg.from(`<svg xmlns="http://www.w3.org/2000/svg"/>`).to({
+  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
     path: "./example.png"
   });
 })();
@@ -38,6 +38,28 @@ Execute script on the command line
 node example.js
 ```
 
+**Example** - resizing a svg proportionally and converting it to png:
+
+Save file as **resize.js**
+
+```javascript
+const svgToImg = require("svg-to-img");
+
+(async () => {
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+    width: 300
+  });
+  
+  console.log(image);
+})();
+```
+
+Execute script on the command line
+
+```
+node resize.js
+```
+
 **Example** - converting a svg to base64-encoded png:
 
 Save file as **base64.js**
@@ -46,7 +68,7 @@ Save file as **base64.js**
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from(`<svg xmlns="http://www.w3.org/2000/svg"/>`).to({
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
     encoding: "base64"
   });
   

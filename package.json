@@ -6,10 +6,47 @@
   "types": "dist/index.d.ts",
   "author": "Etienne Martin",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc --pretty --watch",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "pretest": "npm run lint",
+    "test": "jest src --coverage --verbose",
+    "test:watch": "jest src --coverage --verbose --watch",
+    "prebuild": "rm -rf dist/ && npm run lint",
     "build": "tsc --pretty"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/coverage/",
+      "/dist/",
+      "/typings/",
+      "/tests/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": -10
+      }
+    },
+    "testMatch": [
+      "**/?(*.)(test).(tsx|ts)"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.(tsx|ts)"
+    ]
   },
   "repository": {
     "type": "git",
@@ -20,7 +57,10 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^22.2.0",
     "@types/puppeteer": "^1.1.0",
+    "jest": "^22.4.2",
+    "ts-jest": "^22.4.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-eslint-rules": "^4.1.1",

@@ -12,7 +12,9 @@
       "no-trailing-whitespace": true,
       "newline-before-return": true,
       "no-consecutive-blank-lines": true,
-      "no-console": false
+      "no-console": false,
+      "object-literal-sort-keys": false,
+      "ordered-imports": false
     },
     "rulesDirectory": []
   }

@@ -2,9 +2,9 @@ export const getFileTypeFromPath = (path: string) => {
   return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
 
-export const getSvgNaturalDimensions = (svg: string): Promise<{ width: number; height: number; }> => {
+export const getSvgNaturalDimensions = async (svg: string) => {
   return new Promise((resolve, reject) => {
-    const img = document.createElement("img");
+    const img = new Image();
     const blob = new Blob([svg], { type: "image/svg+xml;charset=utf8" });
 
     img.addEventListener("load", () => {
@@ -22,8 +22,8 @@ export const getSvgNaturalDimensions = (svg: string): Promise<{ width: number; h
   });
 };
 
-export const injectSvgInPage = async (rawSvg: string, width: string, height: string) => {
-  const img = document.createElement("img");
+export const embedSvgInBody = async (rawSvg: string, width: string, height: string) => {
+  const img = new Image();
   const sandbox = document.createElement("div");
 
   sandbox.innerHTML = rawSvg;

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFileTypeFromPath = (path) => {
     return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
-exports.getSvgNaturalDimensions = (svg) => {
+exports.getSvgNaturalDimensions = async (svg) => {
     return new Promise((resolve, reject) => {
         const img = document.createElement("img");
         const blob = new Blob([svg], { type: "image/svg+xml;charset=utf8" });

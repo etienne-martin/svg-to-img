@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
 import { defaultOptions} from "./constants";
-import { getFileTypeFromPath, getSvgNaturalDimensions, injectSvgInPage } from "./helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -41,7 +41,7 @@ const to = (input: Buffer | string) => {
 
     await page.setOfflineMode(true);
     await page.setViewport({ height: 1, width: 1 });
-    await page.evaluate(injectSvgInPage, svg, screenshotOptions.width, screenshotOptions.height);
+    await page.evaluate(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height);
 
     // Infer the file type from the file path
     if (!output.type && screenshotOptions.path) {

@@ -56,3 +56,6 @@ jspm_packages/
 
 # Ignore intellij .idea folder
 .idea
+
+# Ignore test-generated images
+/src/tests/img/*

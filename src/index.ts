@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
 import { defaultOptions} from "./constants";
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, convertFunctionToString } from "./helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, convertFunctionToString, setStyle } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -25,7 +25,7 @@ const scheduleBrowserForDestruction = () => {
 };
 
 const to = (input: Buffer | string) => {
-  return async (output: IOptions) => {
+  return async (output: IOptions): Promise<Buffer | string> => {
     // Convert buffer to string
     const svg = Buffer.isBuffer(input) ? (input as Buffer).toString("utf8") : input;
     const screenshotOptions = {...defaultOptions, ...output};
@@ -57,24 +57,21 @@ const to = (input: Buffer | string) => {
       delete screenshotOptions.quality;
     }
 
-    /* istanbul ignore next */
-    await page.evaluate(() => {
-      document.body.style.margin = "0px";
-      document.body.style.padding = "0px";
-    });
+    await page.evaluate(convertFunctionToString(setStyle, "body", {
+      margin: "0px",
+      padding: "0px"
+    }));
 
     if (screenshotOptions.type === "jpeg") {
-      /* istanbul ignore next */
-      await page.evaluate(() => {
-        document.documentElement.style.background = "#fff";
-      });
+      await page.evaluate(convertFunctionToString(setStyle, "html", {
+        background: "#fff"
+      }));
     }
 
     if (screenshotOptions.background) {
-      /* istanbul ignore next */
-      await page.evaluate(background => {
-        document.body.style.background = background;
-      }, screenshotOptions.background);
+      await page.evaluate(convertFunctionToString(setStyle, "body", {
+        background: screenshotOptions.background
+      }));
     }
 
     const screenshot = await page.screenshot(screenshotOptions);

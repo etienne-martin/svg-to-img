@@ -45,11 +45,32 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
 };
 
 export const convertFunctionToString = (func: any, ...argsArray: any[]) => {
-  const args = "`" + argsArray.join("`,`") + "`";
-  let functionString = func.toString();
-
   // Remove istanbul coverage instruments
-  functionString = functionString.replace(/cov_(.+?)\+\+[,;]?/g, "");
+  const functionString = func.toString().replace(/cov_(.+?)\+\+[,;]?/g, "");
+  const args: Array<string | number | object> = [];
 
-  return `(${functionString})(${args})`;
+  for (const argument of argsArray) {
+    switch (typeof argument) {
+      case "string":
+        args.push("`" + argument + "`");
+        break;
+      case "object":
+        args.push(JSON.stringify(argument));
+        break;
+      default:
+        args.push(argument);
+    }
+  }
+
+  return `(${functionString})(${args.join(",")})`;
+};
+
+export const setStyle = (selector: string, styles: { [key: string]: string; }) => {
+  const elements: HTMLElement[] = Array.from(document.querySelectorAll(selector));
+
+  for (const element of elements) {
+    for (const [property, value] of Object.entries(styles)) {
+      element.style.setProperty(property , value);
+    }
+  }
 };

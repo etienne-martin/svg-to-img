@@ -1,9 +1,9 @@
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody } from "../helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, setStyle } from "../helpers";
 
 Object.defineProperty(URL, "createObjectURL", {
   writable: true,
   value: jest.fn(() => {
-    return `data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg"/>`;
+    return `blob:null/f2747239-6dc7-48bf-80c8-dd0ae9f70d7f`;
   })
 });
 
@@ -21,7 +21,7 @@ Element.prototype.addEventListener = jest.fn((event, callback) => {
   setTimeout(callback, 100);
 });
 
-describe("Helpers", () => {
+describe("Helper functions", () => {
   test("Get file type from path", async () => {
     const fileType = await getFileTypeFromPath("test.jpg");
 
@@ -35,9 +35,17 @@ describe("Helpers", () => {
   });
 
   test("Embed svg in body", async () => {
-    const expectedOutput = `<img src="data:image/svg+xml;charset=utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot;/>">`;
+    const expectedOutput = `<img src="blob:null/f2747239-6dc7-48bf-80c8-dd0ae9f70d7f">`;
     await embedSvgInBody("<svg/>", "10", "10");
 
     expect(document.body.innerHTML).toEqual(expectedOutput);
+  });
+
+  test("Set style", async () => {
+    await setStyle("body", {
+      background: "rgb(0, 153, 255)"
+    });
+
+    expect(document.body.style.backgroundColor).toEqual("rgb(0, 153, 255)");
   });
 });

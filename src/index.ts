@@ -64,13 +64,13 @@ const to = (input: Buffer | string) => {
 
     if (screenshotOptions.type === "jpeg") {
       await page.evaluate(convertFunctionToString(setStyle, "html", {
-        background: "#fff"
+        "background-color": "#fff"
       }));
     }
 
     if (screenshotOptions.background) {
       await page.evaluate(convertFunctionToString(setStyle, "body", {
-        background: screenshotOptions.background
+        "background-color": screenshotOptions.background
       }));
     }
 

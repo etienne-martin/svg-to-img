@@ -102,6 +102,6 @@ The method returns a svg instance based on the given argument.
     - `height` <[number]> height of clipping area
   - `width` <[number]> width of the output image. Defaults to the natural width of the SVG.
   - `height` <[number]> height of the output image. Defaults to the natural height of the SVG.
-  - `background` <[string]> background color of the output image.
-  - `encoding` <[string]> Specify output encoding, can be either `base64`, `utf8`, `binary` or `hex`.
+  - `background` <[string]> background color applied to the output image. Must be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).
+  - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the output image.

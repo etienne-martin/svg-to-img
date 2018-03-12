@@ -81,3 +81,11 @@ Execute script on the command line
 ```
 node base64.js
 ```
+
+## API Documentation
+
+#### svgToImg.from(svg)
+- `svg` <Buffer|string> SVG markup to convert.
+- returns: <[Svg]> a new Svg object.
+
+The method returns a svg instance based on the given arguments.

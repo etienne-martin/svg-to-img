@@ -18,7 +18,7 @@ Note: When you install svg-to-img, it downloads a recent version of Chromium (~1
 
 Caution: svg-to-img uses async/await which is only supported in Node v7.6.0 or greater.
 
-**Example** - converting a svg to png and saving the image as *example.png*:
+**Example** - converting a `svg` to `png` and saving the image as *example.png*:
 
 ```javascript
 const svgToImg = require("svg-to-img");
@@ -30,7 +30,7 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-**Example** - resizing a svg proportionally and converting it to png:
+**Example** - resizing a `svg` proportionally and converting it to `png`:
 
 ```javascript
 const svgToImg = require("svg-to-img");
@@ -44,7 +44,7 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-**Example** - converting a svg to base64-encoded png:
+**Example** - converting a `svg` to base64-encoded png:
 
 ```javascript
 const svgToImg = require("svg-to-img");
@@ -78,6 +78,29 @@ The method returns a svg instance based on the given argument.
     - `height` <[number]> height of clipping area
   - `width` <[number]> width of the output image. Defaults to the natural width of the SVG.
   - `height` <[number]> height of the output image. Defaults to the natural height of the SVG.
-  - `background` <[string]> background color applied to the output image. Must be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).
-  - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`.
+  - `background` <[string]> background color applied to the output image, must be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).
+  - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`. Returns a `Buffer` is this option is omitted.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the output image.
+
+## Built with
+
+* [node.js](https://nodejs.org/en/) - Cross-platform JavaScript run-time environment for executing JavaScript code server-side. 
+* [Puppeteer](https://github.com/GoogleChrome/puppeteer/) - Headless Chrome Node API.
+* [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript that compiles to plain JavaScript.
+* [Jest](https://facebook.github.io/jest/) - Delightful JavaScript Testing.
+
+## Contributing
+
+When contributing to this project, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
+
+Update the [README.md](https://github.com/etienne-martin/svg-to-img/blob/master/README.md) with details of changes to the library.
+
+Build the project and update the [tests](https://github.com/etienne-martin/svg-to-img/tree/master/src/tests) before submitting your pull request.
+
+## Authors
+
+* **Etienne Martin** - *Initial work* - [etiennemartin.ca](http://etiennemartin.ca/)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/etienne-martin/svg-to-img/blob/master/LICENSE) file for details.

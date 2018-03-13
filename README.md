@@ -82,6 +82,18 @@ The method returns a svg instance based on the given argument.
   - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`. Returns a `Buffer` is this option is omitted.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the output image.
 
+### svg.toPng([options])
+- `options` <[Object]> Optional options object that can have the same properties as the `to` method except for the type property.
+- returns: <[Promise]<Buffer|String>> Promise which resolves to the `png` image.
+
+This method is simply a shorthand for the `to` method.
+
+### svg.toJpeg([options])
+- `options` <[Object]> Optional options object that can have the same properties as the `to` method except for the type property.
+- returns: <[Promise]<Buffer|String>> Promise which resolves to the `jpeg` image.
+
+This method is simply a shorthand for the `to` method.
+
 ## Built with
 
 * [node.js](https://nodejs.org/en/) - Cross-platform JavaScript run-time environment for executing JavaScript code server-side. 

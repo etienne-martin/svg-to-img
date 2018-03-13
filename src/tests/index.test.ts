@@ -160,6 +160,28 @@ describe("SVG to image conversion", () => {
     });
     expect(md5(data)).toEqual("40bd56d9e947ce0df2aa4493a23ceef9");
   });
+
+  test("SVG to PNG shorthand", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).toPng();
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 187,
+      height: 150
+    });
+    expect(md5(data)).toEqual("e6a2add8e60d48ad5163c13e3889bb5d");
+  });
+
+  test("SVG to JPEG shorthand", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).toJpeg();
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "jpg",
+      width: 187,
+      height: 150
+    });
+    expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
+  });
 });
 
 // Kill any remaining Chromium instances

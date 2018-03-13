@@ -18,6 +18,18 @@ Note: When you install svg-to-img, it downloads a recent version of Chromium (~1
 
 Caution: svg-to-img uses async/await which is only supported in Node v7.6.0 or greater.
 
+**Example** - converting a `svg` to `png`:
+
+```javascript
+const svgToImg = require("svg-to-img");
+
+(async () => {
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+  
+  console.log(image);
+})();
+```
+
 **Example** - converting a `svg` to `png` and saving the image as *example.png*:
 
 ```javascript

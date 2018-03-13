@@ -71,13 +71,13 @@ The method returns a svg instance based on the given argument.
   - `path` <[string]> The file path to save the image to. The image type will be inferred from file extension. If `path` is a relative path, then it is resolved relative to [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If no path is provided, the image won't be saved to the disk.
   - `type` <[string]> Specify image type, can be either `jpeg` or `png`. Defaults to `png`.
   - `quality` <[number]> The quality of the image, between 0-100. Defaults to `100`. Not applicable to `png` images.
-  - `clip` <[Object]> An object which specifies clipping region of the page. Should have the following fields:
+  - `width` <[number]> width of the output image. Defaults to the natural width of the SVG.
+  - `height` <[number]> height of the output image. Defaults to the natural height of the SVG.
+  - `clip` <[Object]> An object which specifies clipping region of the output image. Should have the following fields:
     - `x` <[number]> x-coordinate of top-left corner of clip area
     - `y` <[number]> y-coordinate of top-left corner of clip area
     - `width` <[number]> width of clipping area
     - `height` <[number]> height of clipping area
-  - `width` <[number]> width of the output image. Defaults to the natural width of the SVG.
-  - `height` <[number]> height of the output image. Defaults to the natural height of the SVG.
   - `background` <[string]> background color applied to the output image, must be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).
   - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`. Returns a `Buffer` is this option is omitted.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the output image.

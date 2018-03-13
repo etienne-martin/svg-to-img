@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
 import { defaultOptions} from "./constants";
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, convertFunctionToString, setStyle } from "./helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, stringifyFunction, setStyle } from "./helpers";
 import { IOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -34,17 +34,19 @@ const to = (input: Buffer | string) => {
 
     // Get the natural dimensions of the SVG if they were not specified
     if (!screenshotOptions.width && !screenshotOptions.height) {
-      const naturalDimensions = await page.evaluate(convertFunctionToString(getSvgNaturalDimensions, svg));
+      const naturalDimensions = await page.evaluate(stringifyFunction(getSvgNaturalDimensions, svg));
 
       screenshotOptions.width = naturalDimensions.width;
       screenshotOptions.height = naturalDimensions.height;
     }
 
+    // Do not disable javascript otherwise the onload event won't work for images
+    // Offline mode is enabled to prevent SVGs from sending requests over the network
     await page.setOfflineMode(true);
     await page.setViewport({ height: 1, width: 1 });
-    await page.evaluate(convertFunctionToString(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
+    await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
 
-    // Infer the file type from the file path if the type is not provided
+    // Infer the file type from the file path if no type is provided
     if (!output.type && screenshotOptions.path) {
       const fileType = getFileTypeFromPath(screenshotOptions.path);
 
@@ -53,23 +55,24 @@ const to = (input: Buffer | string) => {
       }
     }
 
-    if (screenshotOptions.type === "png") {
+    // The quality option is only used with JPEGs
+    if (screenshotOptions.type !== "jpeg") {
       delete screenshotOptions.quality;
     }
 
-    await page.evaluate(convertFunctionToString(setStyle, "body", {
+    await page.evaluate(stringifyFunction(setStyle, "body", {
       margin: "0px",
       padding: "0px"
     }));
 
     if (screenshotOptions.type === "jpeg") {
-      await page.evaluate(convertFunctionToString(setStyle, "html", {
+      await page.evaluate(stringifyFunction(setStyle, "html", {
         "background-color": "#fff"
       }));
     }
 
     if (screenshotOptions.background) {
-      await page.evaluate(convertFunctionToString(setStyle, "body", {
+      await page.evaluate(stringifyFunction(setStyle, "body", {
         "background-color": screenshotOptions.background
       }));
     }

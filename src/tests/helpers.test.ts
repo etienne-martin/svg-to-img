@@ -1,4 +1,4 @@
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, setStyle } from "../helpers";
+import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, stringifyFunction, setStyle } from "../helpers";
 
 Object.defineProperty(URL, "createObjectURL", {
   writable: true,
@@ -39,6 +39,12 @@ describe("Helper functions", () => {
     await embedSvgInBody("<svg/>", "10", "10");
 
     expect(document.body.innerHTML).toEqual(expectedOutput);
+  });
+
+  test("Stringify function", async () => {
+    const func = stringifyFunction((str: string, obj: object, num: number) => str + obj + num, "a", {a: 1}, 1);
+
+    expect(func).toEqual(`((str, obj, num) => str + obj + num)(\`a\`,{"a":1},1)`);
   });
 
   test("Set style", async () => {

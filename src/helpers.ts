@@ -54,10 +54,10 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
   });
 };
 
-export const convertFunctionToString = (func: any, ...argsArray: any[]) => {
+export const stringifyFunction = (func: any, ...argsArray: any[]) => {
   // Remove istanbul coverage instruments
   const functionString = func.toString().replace(/cov_(.+?)\+\+[,;]?/g, "");
-  const args: Array<string | number | object> = [];
+  const args: Array<string|object|number> = [];
 
   for (const argument of argsArray) {
     switch (typeof argument) {

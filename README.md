@@ -24,7 +24,7 @@ Caution: svg-to-img uses async/await which is only supported in Node v7.6.0 or g
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+  const image = await svgToImg.from("<svg xmlns='...'/>").toPng();
   
   console.log(image);
 })();
@@ -36,7 +36,7 @@ const svgToImg = require("svg-to-img");
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  await svgToImg.from("<svg xmlns='...'/>").to({
     path: "./example.png"
   });
 })();
@@ -48,7 +48,7 @@ const svgToImg = require("svg-to-img");
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='...'/>").to({
     width: 300
   });
   
@@ -62,7 +62,7 @@ const svgToImg = require("svg-to-img");
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='...'/>").to({
     encoding: "base64"
   });
   

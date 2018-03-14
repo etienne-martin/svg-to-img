@@ -1,5 +1,6 @@
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, stringifyFunction, setStyle } from "../helpers";
+import { getFileTypeFromPath, getNaturalSvgDimensions, embedSvgInBody, stringifyFunction, setStyle } from "../helpers";
 
+// Mock URL.createObjectURL(blob);
 Object.defineProperty(URL, "createObjectURL", {
   writable: true,
   value: jest.fn(() => {
@@ -7,16 +8,19 @@ Object.defineProperty(URL, "createObjectURL", {
   })
 });
 
+// Mock img.naturalWidth
 Object.defineProperty(HTMLImageElement.prototype, "naturalHeight", {
   writable: true,
   value: 10
 });
 
+// Mock img.naturalWidth
 Object.defineProperty(HTMLImageElement.prototype, "naturalWidth", {
   writable: true,
   value: 10
 });
 
+// Mock img.addEventListener("onload", () => {});
 Element.prototype.addEventListener = jest.fn((event, callback) => {
   setTimeout(callback, 100);
 });
@@ -29,7 +33,7 @@ describe("Helper functions", () => {
   });
 
   test("Get SVG natural dimensions", async () => {
-    const dimensions = await getSvgNaturalDimensions("<svg/>");
+    const dimensions = await getNaturalSvgDimensions("<svg xmlns='http://www.w3.org/2000/svg'/>");
 
     expect(dimensions).toEqual({ height: 10, width: 10 });
   });

@@ -2,7 +2,7 @@ export const getFileTypeFromPath = (path: string) => {
   return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
 
-export const getSvgNaturalDimensions = async (svg: string) => {
+export const getNaturalSvgDimensions = async (svg: string) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const blob = new Blob([svg], { type: "image/svg+xml;charset=utf8" });
@@ -33,6 +33,7 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
     /* istanbul ignore if  */
     if (!svg) { return; }
 
+    // Set preserveAspectRatio to none to allow the SVG to be resized to any dimensions
     svg.setAttribute("preserveAspectRatio", "none");
 
     const img = new Image();

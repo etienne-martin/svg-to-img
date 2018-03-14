@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
-import { defaultOptions } from "./constants";
-import { getFileTypeFromPath, getSvgNaturalDimensions, embedSvgInBody, stringifyFunction, setStyle } from "./helpers";
+import { defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, config } from "./constants";
+import { getFileTypeFromPath, getNaturalSvgDimensions, embedSvgInBody, stringifyFunction, setStyle } from "./helpers";
 import { IOptions, IOptionsPngShorthand, IOptionsJpegShorthand } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -10,9 +10,7 @@ let browserInstance: puppeteer.Browser|undefined;
 const getBrowser = async () => {
   clearTimeout(browserDestructionTimeout);
 
-  return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  }));
+  return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch(config.puppeteer));
 };
 
 const scheduleBrowserForDestruction = () => {
@@ -38,22 +36,22 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
 
   // Get the natural dimensions of the SVG if they were not specified
   if (!screenshotOptions.width && !screenshotOptions.height) {
-    const naturalDimensions = await page.evaluate(stringifyFunction(getSvgNaturalDimensions, svg));
+    const naturalSvgDimensions = await page.evaluate(stringifyFunction(getNaturalSvgDimensions, svg));
 
-    screenshotOptions.width = naturalDimensions.width;
-    screenshotOptions.height = naturalDimensions.height;
+    screenshotOptions.width = naturalSvgDimensions.width;
+    screenshotOptions.height = naturalSvgDimensions.height;
   }
 
-  const currentDimensions = await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
+  const currentSvgDimensions = await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
 
-  // Resize the viewport to mirror the in-browser svg size
-  await page.setViewport({ width: currentDimensions.width, height: currentDimensions.height });
+  // Resize the viewport to mirror the in-browser SVG size
+  await page.setViewport({ width: currentSvgDimensions.width, height: currentSvgDimensions.height });
 
   // Infer the file type from the file path if no type is provided
   if (!output.type && screenshotOptions.path) {
     const fileType = getFileTypeFromPath(screenshotOptions.path);
 
-    if (["jpeg", "png"].includes(fileType)) {
+    if (config.supportedImageTypes.includes(fileType)) {
       screenshotOptions.type = fileType as ScreenshotOptions["type"];
     }
   }
@@ -64,13 +62,13 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
   }
 
   await page.evaluate(stringifyFunction(setStyle, "body", {
-    margin: "0px",
-    padding: "0px"
+    margin: 0,
+    padding: 0
   }));
 
   if (screenshotOptions.type === "jpeg") {
     await page.evaluate(stringifyFunction(setStyle, "html", {
-      "background-color": "#fff"
+      "background-color": config.jpegBackground
     }));
   }
 
@@ -100,21 +98,13 @@ const to = (input: Buffer|string) => {
 
 const toPng = (input: Buffer|string) => {
   return async (output?: IOptionsPngShorthand): Promise<Buffer|string> => {
-    const defaultShorthandOptions: IOptions = {
-      type: "png"
-    };
-
-    return convertSvg(input, {...defaultShorthandOptions, ...output});
+    return convertSvg(input, {...defaultPngShorthandOptions, ...output});
   };
 };
 
 const toJpeg = (input: Buffer|string) => {
   return async (output?: IOptionsJpegShorthand): Promise<Buffer|string> => {
-    const defaultShorthandOptions: IOptions = {
-      type: "jpeg"
-    };
-
-    return convertSvg(input, {...defaultShorthandOptions, ...output});
+    return convertSvg(input, {...defaultJpegShorthandOptions, ...output});
   };
 };
 

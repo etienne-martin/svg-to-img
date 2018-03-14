@@ -33,6 +33,9 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
   const browser = await getBrowser();
   const page = await browser.newPage();
 
+  // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
+  await page.setOfflineMode(true);
+
   // Get the natural dimensions of the SVG if they were not specified
   if (!screenshotOptions.width && !screenshotOptions.height) {
     const naturalDimensions = await page.evaluate(stringifyFunction(getSvgNaturalDimensions, svg));
@@ -41,11 +44,10 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
     screenshotOptions.height = naturalDimensions.height;
   }
 
-  // Do not disable javascript otherwise the onload event won't work for images
-  // Offline mode is enabled to prevent SVGs from sending requests over the network
-  await page.setOfflineMode(true);
-  await page.setViewport({ height: 1, width: 1 });
-  await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
+  const currentDimensions = await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
+
+  // Resize the viewport to mirror the image size
+  await page.setViewport({ width: currentDimensions.width, height: currentDimensions.height });
 
   // Infer the file type from the file path if no type is provided
   if (!output.type && screenshotOptions.path) {
@@ -56,7 +58,7 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
     }
   }
 
-  // The quality option is only used with JPEGs
+  // The quality option is only applicable to jpeg images.
   if (screenshotOptions.type !== "jpeg") {
     delete screenshotOptions.quality;
   }

@@ -43,7 +43,10 @@ export const embedSvgInBody = async (rawSvg: string, width: string, height: stri
     img.src = URL.createObjectURL(blob);
 
     img.addEventListener("load", () => {
-      resolve();
+      resolve({
+        width: img.clientWidth,
+        height: img.clientHeight
+      });
     });
 
     img.addEventListener("error", () => {

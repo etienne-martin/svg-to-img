@@ -2,7 +2,7 @@ import * as puppeteer from "puppeteer";
 import { ScreenshotOptions } from "puppeteer";
 import { defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, config } from "./constants";
 import { getFileTypeFromPath, getNaturalSvgDimensions, embedSvgInBody, stringifyFunction, setStyle } from "./helpers";
-import { IOptions, IOptionsPngShorthand, IOptionsJpegShorthand } from "./typings/types";
+import { IOptions, IPngShorthandOptions, IJpegShorthandOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
 let browserInstance: puppeteer.Browser|undefined;
@@ -24,10 +24,9 @@ const scheduleBrowserForDestruction = () => {
   }, 1000);
 };
 
-const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffer|string> => {
-  // Convert buffer to string
-  const svg = Buffer.isBuffer(input) ? (input as Buffer).toString("utf8") : input;
-  const screenshotOptions = {...defaultOptions, ...output};
+const convertSvg = async (inputSvg: Buffer|string, options: IOptions): Promise<Buffer|string> => {
+  const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
+  const screenshotOptions = {...defaultOptions, ...options};
   const browser = await getBrowser();
   const page = await browser.newPage();
 
@@ -48,7 +47,7 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
   await page.setViewport({ width: currentSvgDimensions.width, height: currentSvgDimensions.height });
 
   // Infer the file type from the file path if no type is provided
-  if (!output.type && screenshotOptions.path) {
+  if (!options.type && screenshotOptions.path) {
     const fileType = getFileTypeFromPath(screenshotOptions.path);
 
     if (config.supportedImageTypes.includes(fileType)) {
@@ -90,28 +89,28 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
   return screenshot;
 };
 
-const to = (input: Buffer|string) => {
-  return async (output: IOptions): Promise<Buffer|string> => {
-    return convertSvg(input, output);
+const to = (svg: Buffer|string) => {
+  return async (options: IOptions): Promise<Buffer|string> => {
+    return convertSvg(svg, options);
   };
 };
 
-const toPng = (input: Buffer|string) => {
-  return async (output?: IOptionsPngShorthand): Promise<Buffer|string> => {
-    return convertSvg(input, {...defaultPngShorthandOptions, ...output});
+const toPng = (svg: Buffer|string) => {
+  return async (options?: IPngShorthandOptions): Promise<Buffer|string> => {
+    return convertSvg(svg, {...defaultPngShorthandOptions, ...options});
   };
 };
 
-const toJpeg = (input: Buffer|string) => {
-  return async (output?: IOptionsJpegShorthand): Promise<Buffer|string> => {
-    return convertSvg(input, {...defaultJpegShorthandOptions, ...output});
+const toJpeg = (svg: Buffer|string) => {
+  return async (options?: IJpegShorthandOptions): Promise<Buffer|string> => {
+    return convertSvg(svg, {...defaultJpegShorthandOptions, ...options});
   };
 };
 
-export const from = (input: Buffer|string) => {
+export const from = (svg: Buffer|string) => {
   return {
-    to: to(input),
-    toPng: toPng(input),
-    toJpeg: toJpeg(input)
+    to: to(svg),
+    toPng: toPng(svg),
+    toJpeg: toJpeg(svg)
   };
 };

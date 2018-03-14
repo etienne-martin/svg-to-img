@@ -7,11 +7,11 @@ export interface IOptions extends puppeteer.ScreenshotOptions {
   height?: number;
 }
 
-export interface IOptionsPngShorthand extends IOptions  {
+export interface IPngShorthandOptions extends IOptions  {
   type?: never;
   quality?: never;
 }
 
-export interface IOptionsJpegShorthand extends IOptions  {
+export interface IJpegShorthandOptions extends IOptions  {
   type?: never;
 }

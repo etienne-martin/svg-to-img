@@ -46,7 +46,7 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
 
   const currentDimensions = await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
 
-  // Resize the viewport to mirror the image size
+  // Resize the viewport to mirror the in-browser svg size
   await page.setViewport({ width: currentDimensions.width, height: currentDimensions.height });
 
   // Infer the file type from the file path if no type is provided

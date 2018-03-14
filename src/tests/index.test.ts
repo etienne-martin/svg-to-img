@@ -98,6 +98,24 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("ce65eea472df3b38bae00d9e5e6e8f0d");
   });
 
+  test("Clip the image", async () => {
+    const data = await svgToImg.from(svgBuffer).to({
+      clip: {
+        x: 10,
+        y: 10,
+        width: 100,
+        height: 100
+      }
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 100,
+      height: 100
+    });
+    expect(md5(data)).toEqual("448274496ea3fa97f7d110697af9a268");
+  });
+
   test("Custom background color", async () => {
     const data = await svgToImg.from(svgString).to({
       background: "#09f"

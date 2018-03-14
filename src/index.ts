@@ -10,7 +10,9 @@ let browserInstance: puppeteer.Browser|undefined;
 const getBrowser = async () => {
   clearTimeout(browserDestructionTimeout);
 
-  return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch());
+  return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  }));
 };
 
 const scheduleBrowserForDestruction = () => {
@@ -18,7 +20,7 @@ const scheduleBrowserForDestruction = () => {
   browserDestructionTimeout = setTimeout(() => {
     /* istanbul ignore next */
     if (browserInstance) {
-      browserInstance.close();
+      browserInstance.close(); // Closes the browser asynchronously (no await)
       browserInstance = undefined;
     }
   }, 1000);
@@ -78,7 +80,7 @@ const convertSvg = async (input: Buffer|string, output: IOptions): Promise<Buffe
 
   const screenshot = await page.screenshot(screenshotOptions);
 
-  page.close(); // Close tab asynchronously (no await)
+  page.close(); // Closes the tab asynchronously (no await)
   scheduleBrowserForDestruction();
 
   if (screenshotOptions.encoding) {
@@ -100,9 +102,7 @@ const toPng = (input: Buffer|string) => {
       type: "png"
     };
 
-    const options = {...defaultShorthandOptions, ...output};
-
-    return convertSvg(input, options);
+    return convertSvg(input, {...defaultShorthandOptions, ...output});
   };
 };
 
@@ -112,9 +112,7 @@ const toJpeg = (input: Buffer|string) => {
       type: "jpeg"
     };
 
-    const options = {...defaultShorthandOptions, ...output};
-
-    return convertSvg(input, options);
+    return convertSvg(input, {...defaultShorthandOptions, ...output});
   };
 };
 

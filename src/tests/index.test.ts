@@ -56,7 +56,7 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
   });
 
-  test("Unsupported file extension", async () => {
+  test("Unknown file extension", async () => {
     await svgToImg.from(svgBuffer).to({
       path: `${outputDir}/image.ext`
     });
@@ -181,6 +181,14 @@ describe("SVG to image conversion", () => {
       height: 150
     });
     expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
+  });
+
+  test("Wait for browser destruction", async (done) => {
+    await svgToImg.from(responsiveSvgBuffer).toJpeg();
+
+    setTimeout(async () => {
+      done();
+    }, 2000);
   });
 });
 

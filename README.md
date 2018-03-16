@@ -19,7 +19,9 @@ npm i --save svg-to-img
 
 Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library.
 
-🐧: If you're planning on running svg-to-img on Debian, you will need to manually install the following dependencies:
+#### Debian
+
+If you're planning on running svg-to-img on Debian, you will need to manually install the following dependencies:
 
 ```bash
 #!/bin/bash

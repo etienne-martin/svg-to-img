@@ -4,3 +4,4 @@ dist/tests/
 tsconfig.json
 tslint.json
 coverage
+.circleci

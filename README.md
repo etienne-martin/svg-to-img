@@ -1,6 +1,4 @@
 <h1 align="center">
-  <br>
-  <br>
   svg-to-img
   <br>
   <br>

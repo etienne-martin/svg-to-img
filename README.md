@@ -1,4 +1,4 @@
-# svg-to-img
+# svg-to-img (test)
 
 #### A node.js library to convert SVGs to images built with [Puppeteer](https://github.com/GoogleChrome/puppeteer).
 

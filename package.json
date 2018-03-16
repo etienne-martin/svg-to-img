@@ -68,6 +68,9 @@
   "bugs": {
     "url": "https://github.com/etienne-martin/svg-to-img/issues"
   },
+  "engines": {
+    "node": ">= 7.6.0"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/image-size": "0.0.29",

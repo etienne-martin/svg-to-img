@@ -1,6 +1,25 @@
-# 📷 svg-to-img
+<h1 align="center">
+  <br>
+  <br>
+  svg-to-img
+  <br>
+  <br>
+</h1>
 
-A node.js library to convert SVGs to images built with [Puppeteer](https://github.com/GoogleChrome/puppeteer).
+<h4 align="center">A node.js library to convert SVGs to images built with <a href="https://github.com/GoogleChrome/puppeteer" target="_blank">Puppeteer</a>.</h4>
+
+<p align="center">
+  <a href="https://ci.appveyor.com/project/webtorrent/webtorrent">
+    <img src="https://img.shields.io/node/v/svg-to-img.svg" alt="node version">
+  </a>
+  <a href="https://www.npmjs.com/package/webtorrent">
+    <img src="https://img.shields.io/npm/v/svg-to-img.svg" alt="npm version">
+  </a>
+  <a href="https://www.npmjs.com/package/svg-to-img">
+    <img src="https://img.shields.io/npm/dw/svg-to-img.svg" alt="npm downloads">
+  </a>
+</p>
+<br>
 
 ## Getting Started
 

@@ -24,6 +24,7 @@
     "pretest": "npm run lint",
     "test": "jest src --coverage --verbose",
     "test:watch": "jest src --coverage --verbose --watch",
+    "coverage": "coveralls < coverage/lcov.info",
     "prebuild": "rm -rf dist/ && npm run lint",
     "build": "tsc --pretty"
   },
@@ -77,6 +78,7 @@
     "@types/jest": "^22.2.0",
     "@types/puppeteer": "^1.1.0",
     "@types/rimraf": "^2.0.2",
+    "coveralls": "^3.0.0",
     "image-size": "^0.6.2",
     "jest": "^22.4.2",
     "rimraf": "^2.6.2",

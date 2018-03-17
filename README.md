@@ -2,6 +2,8 @@
 
 #### A node.js library to convert SVGs to images built with [Puppeteer](https://github.com/GoogleChrome/puppeteer).
 
+
+[![Coveralls github](https://img.shields.io/coveralls/github/etienne-martin/svg-to-img.svg)](https://coveralls.io/github/etienne-martin/svg-to-img)
 [![CircleCI build](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg)](https://circleci.com/gh/etienne-martin/svg-to-img)
 [![node version](https://img.shields.io/node/v/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)
 [![npm version](https://img.shields.io/npm/v/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)

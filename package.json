@@ -24,7 +24,7 @@
     "pretest": "npm run lint",
     "test": "jest src --coverage --verbose",
     "test:watch": "jest src --coverage --verbose --watch",
-    "coverage": "coveralls < coverage/lcov.info",
+    "coverage": "coveralls < ./coverage/lcov.info",
     "prebuild": "rm -rf dist/ && npm run lint",
     "build": "tsc --pretty"
   },

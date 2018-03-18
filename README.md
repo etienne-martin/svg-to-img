@@ -113,7 +113,7 @@ The method returns a svg instance based on the given argument.
     - `width` <[number]> width of clipping area
     - `height` <[number]> height of clipping area
   - `background` <[string]> background color applied to the output image, must be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).
-  - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`. Returns a `Buffer` is this option is omitted.
+  - `encoding` <[string]> Specify encoding, can be either `base64`, `utf8`, `binary` or `hex`. Returns a `Buffer` if this option is omitted.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the output image.
 
 ### svg.toPng([options])

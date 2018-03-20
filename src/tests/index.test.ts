@@ -231,9 +231,8 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("b1080b283475987c0d57dd16a9f19288");
   });
 
-  /*
   test("Clip the image", async () => {
-    const data = await svgToImg.from(svgBuffer).to({
+    const data = await svgToImg.from(svgBuffer).toPng({
       clip: {
         x: 10,
         y: 10,
@@ -247,9 +246,8 @@ describe("SVG to image conversion", () => {
       width: 100,
       height: 100
     });
-    expect(md5(data)).toEqual("448274496ea3fa97f7d110697af9a268");
+    expect(md5(data)).toEqual("68c1e882efb0a3ce1791e5a6e6b80bd7");
   });
-  */
 
   test("Wait for browser destruction", async (done) => {
     await svgToImg.from(responsiveSvgBuffer).toJpeg();

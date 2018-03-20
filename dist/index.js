@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const puppeteer = require("puppeteer");
-const constants_1 = require("./constants");
 const helpers_1 = require("./helpers");
+const constants_1 = require("./constants");
 let browserDestructionTimeout; // TODO: add proper typing
 let browserInstance;
 const getBrowser = async () => {
@@ -44,6 +44,7 @@ const convertSvg = async (inputSvg, passedOptions) => {
         type: options.type,
         quality: options.quality,
         background: options.background,
+        clip: options.clip,
         jpegBackground: constants_1.config.jpegBackground
     }));
     scheduleBrowserForDestruction();

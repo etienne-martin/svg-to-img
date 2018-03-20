@@ -1,3 +1,4 @@
+import { IBoundingBox } from "./typings/types";
 export declare const getFileTypeFromPath: (path: string) => string;
 export declare const stringifyFunction: (func: any, ...argsArray: any[]) => string;
 export declare const renderSvg: (svg: string, options: {
@@ -5,6 +6,7 @@ export declare const renderSvg: (svg: string, options: {
     height?: number | undefined;
     type: "jpeg" | "png" | "webp" | undefined;
     quality: number | undefined;
-    background: string | undefined;
+    background?: string | undefined;
+    clip?: IBoundingBox | undefined;
     jpegBackground: string;
 }) => Promise<{}>;

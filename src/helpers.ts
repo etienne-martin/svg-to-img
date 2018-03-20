@@ -1,4 +1,4 @@
-import { IOptions } from "./typings/types";
+import { IOptions, IBoundingBox } from "./typings/types";
 
 export const getFileTypeFromPath = (path: string) => {
   return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
@@ -31,6 +31,7 @@ export const renderSvg = async (svg: string, options: {
   type: IOptions["type"];
   quality: IOptions["quality"];
   background?: IOptions["background"];
+  clip?: IBoundingBox;
   jpegBackground: string;
 }) => {
   return new Promise((resolve, reject) => {
@@ -62,8 +63,13 @@ export const renderSvg = async (svg: string, options: {
         imageHeight = parseInt(computedStyle.getPropertyValue("height"), 10);
       }
 
-      canvas.width = imageWidth;
-      canvas.height = imageHeight;
+      if (options.clip) {
+        canvas.width = options.clip.width;
+        canvas.height = options.clip.height;
+      } else {
+        canvas.width = imageWidth;
+        canvas.height = imageHeight;
+      }
 
       // Set default background color
       if (options.type === "jpeg") {
@@ -78,13 +84,27 @@ export const renderSvg = async (svg: string, options: {
       }
 
       // Draw the image
-      ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
+      if (options.clip) {
+        // Clipped image
+        ctx.drawImage(
+          img,
+          options.clip.x,
+          options.clip.y,
+          options.clip.width,
+          options.clip.height,
+          0,
+          0,
+          options.clip.width,
+          options.clip.height
+        );
+      } else {
+        ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
+      }
 
       const dataURI = canvas.toDataURL("image/" + options.type, options.quality);
       const base64 = dataURI.substr(`data:image/${options.type};base64,`.length);
 
       document.body.removeChild(img);
-
       resolve(base64);
     });
 

@@ -26,6 +26,7 @@ exports.renderSvg = async (svg, options) => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const img = new Image();
+        /* istanbul ignore if */
         if (!ctx) {
             return reject(new Error("Canvas not supported"));
         }
@@ -43,8 +44,14 @@ exports.renderSvg = async (svg, options) => {
                 imageWidth = parseInt(computedStyle.getPropertyValue("width"), 10);
                 imageHeight = parseInt(computedStyle.getPropertyValue("height"), 10);
             }
-            canvas.width = imageWidth;
-            canvas.height = imageHeight;
+            if (options.clip) {
+                canvas.width = options.clip.width;
+                canvas.height = options.clip.height;
+            }
+            else {
+                canvas.width = imageWidth;
+                canvas.height = imageHeight;
+            }
             // Set default background color
             if (options.type === "jpeg") {
                 ctx.fillStyle = options.jpegBackground;
@@ -55,12 +62,17 @@ exports.renderSvg = async (svg, options) => {
                 ctx.fillStyle = options.background;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
-            // Draw the image
-            ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
+            // Clip the image
+            if (options.clip) {
+                ctx.drawImage(img, options.clip.x, options.clip.y, options.clip.width, options.clip.height, 0, 0, options.clip.width, options.clip.height);
+            }
+            else {
+                ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
+            }
             const dataURI = canvas.toDataURL("image/" + options.type, options.quality);
             const base64 = dataURI.substr(`data:image/${options.type};base64,`.length);
-            document.body.removeChild(img);
             resolve(base64);
+            document.body.removeChild(img);
         });
         img.addEventListener("error", () => {
             reject(new Error("Malformed SVG"));

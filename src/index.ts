@@ -1,10 +1,7 @@
 import * as fs from "fs";
 import * as puppeteer from "puppeteer";
-import {
-  defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, config,
-  defaultWebpShorthandOptions
-} from "./constants";
 import { getFileTypeFromPath, renderSvg, stringifyFunction } from "./helpers";
+import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
 import { IOptions, IShorthandOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
@@ -56,6 +53,7 @@ const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Pro
     type: options.type,
     quality: options.quality,
     background: options.background,
+    clip: options.clip,
     jpegBackground: config.jpegBackground
   }));
 

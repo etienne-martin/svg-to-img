@@ -52,25 +52,25 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-**Example** - converting a `svg` to `png` and saving the image as *example.png*:
+**Example** - converting a `svg` to `jpeg` and saving the image as *example.jpeg*:
 
 ```javascript
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
-    path: "./example.png"
+  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toJpeg({
+    path: "./example.jpeg"
   });
 })();
 ```
 
-**Example** - resizing a `svg` proportionally and converting it to `png`:
+**Example** - resizing a `svg` proportionally and converting it to `webp`:
 
 ```javascript
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toWebp({
     width: 300
   });
   
@@ -84,7 +84,7 @@ const svgToImg = require("svg-to-img");
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng({
     encoding: "base64"
   });
   

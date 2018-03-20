@@ -9,3 +9,4 @@ export declare const config: {
 export declare const defaultOptions: IOptions;
 export declare const defaultPngShorthandOptions: IOptions;
 export declare const defaultJpegShorthandOptions: IOptions;
+export declare const defaultWebpShorthandOptions: IOptions;

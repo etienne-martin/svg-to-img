@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = {
-    supportedImageTypes: ["jpeg", "png"],
+    supportedImageTypes: ["jpeg", "png", "webp"],
     jpegBackground: "#fff",
     puppeteer: {
         args: ["--no-sandbox", "--disable-setuid-sandbox"]
     }
 };
 exports.defaultOptions = {
-    omitBackground: true,
-    quality: 100,
+    quality: 1,
     type: "png"
 };
 exports.defaultPngShorthandOptions = {
@@ -17,4 +16,7 @@ exports.defaultPngShorthandOptions = {
 };
 exports.defaultJpegShorthandOptions = {
     type: "jpeg"
+};
+exports.defaultWebpShorthandOptions = {
+    type: "webp"
 };

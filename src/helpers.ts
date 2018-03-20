@@ -25,7 +25,7 @@ export const stringifyFunction = (func: any, ...argsArray: any[]) => {
   return `(${functionString})(${args.join(",")})`;
 };
 
-export const renderSvg = (svg: string, options: {
+export const renderSvg = async (svg: string, options: {
   width?: IOptions["width"];
   height?: IOptions["height"];
   type: IOptions["type"];

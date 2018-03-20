@@ -16,7 +16,7 @@
 To use svg-to-img in your project, run:
 
 ```bash
-npm i --save svg-to-img
+npm install svg-to-img -S
 ```
 
 Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library.
@@ -52,25 +52,25 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
-**Example** - converting a `svg` to `png` and saving the image as *example.png*:
+**Example** - converting a `svg` to `jpeg` and saving the image as *example.jpeg*:
 
 ```javascript
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
-    path: "./example.png"
+  await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toJpeg({
+    path: "./example.jpeg"
   });
 })();
 ```
 
-**Example** - resizing a `svg` proportionally and converting it to `png`:
+**Example** - resizing a `svg` proportionally and converting it to `webp`:
 
 ```javascript
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toWebp({
     width: 300
   });
   
@@ -84,7 +84,7 @@ const svgToImg = require("svg-to-img");
 const svgToImg = require("svg-to-img");
 
 (async () => {
-  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").to({
+  const image = await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng({
     encoding: "base64"
   });
   
@@ -103,8 +103,8 @@ The method returns a svg instance based on the given argument.
 ### svg.to([options])
 - `options` <[Object]> Options object which might have the following properties:
   - `path` <[string]> The file path to save the image to. The image type will be inferred from file extension. If `path` is a relative path, then it is resolved relative to [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If no path is provided, the image won't be saved to the disk.
-  - `type` <[string]> Specify image type, can be either `jpeg` or `png`. Defaults to `png`.
-  - `quality` <[number]> The quality of the image, between 0-100. Defaults to `100`. Not applicable to `png` images.
+  - `type` <[string]> Specify image type, can be either `png`, `jpeg` or `webp`. Defaults to `png`.
+  - `quality` <[number]> The quality of the image, between 0-1. Defaults to `1`. Not applicable to `png` images.
   - `width` <[number]> width of the output image. Defaults to the natural width of the SVG.
   - `height` <[number]> height of the output image. Defaults to the natural height of the SVG.
   - `clip` <[Object]> An object which specifies clipping region of the output image. Should have the following fields:
@@ -125,6 +125,12 @@ This method is simply a shorthand for the `to` method.
 ### svg.toJpeg([options])
 - `options` <[Object]> Optional options object that can have the same properties as the `to` method except for the type property.
 - returns: <[Promise]<Buffer|String>> Promise which resolves to the `jpeg` image.
+
+This method is simply a shorthand for the `to` method.
+
+### svg.toWebp([options])
+- `options` <[Object]> Optional options object that can have the same properties as the `to` method except for the type property.
+- returns: <[Promise]<Buffer|String>> Promise which resolves to the `webp` image.
 
 This method is simply a shorthand for the `to` method.
 

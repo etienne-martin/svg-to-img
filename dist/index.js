@@ -1,75 +1,90 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
 const puppeteer = require("puppeteer");
-const constants_1 = require("./constants");
 const helpers_1 = require("./helpers");
+const constants_1 = require("./constants");
 let browserDestructionTimeout; // TODO: add proper typing
 let browserInstance;
 const getBrowser = async () => {
     clearTimeout(browserDestructionTimeout);
-    return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch());
+    if (!browserInstance) {
+        browserInstance = await puppeteer.launch(constants_1.config.puppeteer);
+        await browserInstance.newPage();
+    }
+    return browserInstance;
 };
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
-    browserDestructionTimeout = setTimeout(async () => {
+    browserDestructionTimeout = setTimeout(() => {
         /* istanbul ignore next */
         if (browserInstance) {
-            browserInstance.close();
+            browserInstance.close(); // Closes the browser asynchronously (no await)
             browserInstance = undefined;
         }
     }, 1000);
 };
-const to = (input) => {
-    return async (output) => {
-        // Convert buffer to string
-        const svg = Buffer.isBuffer(input) ? input.toString("utf8") : input;
-        const screenshotOptions = Object.assign({}, constants_1.defaultOptions, output);
-        const browser = await getBrowser();
-        const page = await browser.newPage();
-        // Get the natural dimensions of the SVG if they were not specified
-        if (!screenshotOptions.width && !screenshotOptions.height) {
-            const naturalDimensions = await page.evaluate(helpers_1.convertFunctionToString(helpers_1.getSvgNaturalDimensions, svg));
-            screenshotOptions.width = naturalDimensions.width;
-            screenshotOptions.height = naturalDimensions.height;
+const convertSvg = async (inputSvg, passedOptions) => {
+    const svg = Buffer.isBuffer(inputSvg) ? inputSvg.toString("utf8") : inputSvg;
+    const options = Object.assign({}, constants_1.defaultOptions, passedOptions);
+    const browser = await getBrowser();
+    const page = (await browser.pages())[0];
+    // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
+    await page.setOfflineMode(true);
+    // Infer the file type from the file path if no type is provided
+    if (!passedOptions.type && options.path) {
+        const fileType = helpers_1.getFileTypeFromPath(options.path);
+        if (constants_1.config.supportedImageTypes.includes(fileType)) {
+            options.type = fileType;
         }
-        await page.setOfflineMode(true);
-        await page.setViewport({ height: 1, width: 1 });
-        await page.evaluate(helpers_1.convertFunctionToString(helpers_1.embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
-        // Infer the file type from the file path if the type is not provided
-        if (!output.type && screenshotOptions.path) {
-            const fileType = helpers_1.getFileTypeFromPath(screenshotOptions.path);
-            if (["jpeg", "png"].includes(fileType)) {
-                screenshotOptions.type = fileType;
-            }
-        }
-        if (screenshotOptions.type === "png") {
-            delete screenshotOptions.quality;
-        }
-        await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "body", {
-            margin: "0px",
-            padding: "0px"
-        }));
-        if (screenshotOptions.type === "jpeg") {
-            await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "html", {
-                background: "#fff"
-            }));
-        }
-        if (screenshotOptions.background) {
-            await page.evaluate(helpers_1.convertFunctionToString(helpers_1.setStyle, "body", {
-                background: screenshotOptions.background
-            }));
-        }
-        const screenshot = await page.screenshot(screenshotOptions);
-        page.close(); // Close tab asynchronously (no await)
-        scheduleBrowserForDestruction();
-        if (screenshotOptions.encoding) {
-            return screenshot.toString(screenshotOptions.encoding);
-        }
-        return screenshot;
+    }
+    const base64 = await page.evaluate(helpers_1.stringifyFunction(helpers_1.renderSvg, svg, {
+        width: options.width,
+        height: options.height,
+        type: options.type,
+        quality: options.quality,
+        background: options.background,
+        clip: options.clip,
+        jpegBackground: constants_1.config.jpegBackground
+    }));
+    scheduleBrowserForDestruction();
+    const buffer = Buffer.from(base64, "base64");
+    if (options.path) {
+        fs.writeFileSync(options.path, buffer);
+    }
+    if (options.encoding === "base64") {
+        return base64;
+    }
+    if (!options.encoding) {
+        return buffer;
+    }
+    return buffer.toString(options.encoding);
+};
+const to = (svg) => {
+    return async (options) => {
+        return convertSvg(svg, options);
     };
 };
-exports.from = (input) => {
+const toPng = (svg) => {
+    return async (options) => {
+        return convertSvg(svg, Object.assign({}, constants_1.defaultPngShorthandOptions, options));
+    };
+};
+const toJpeg = (svg) => {
+    return async (options) => {
+        return convertSvg(svg, Object.assign({}, constants_1.defaultJpegShorthandOptions, options));
+    };
+};
+const toWebp = (svg) => {
+    return async (options) => {
+        return convertSvg(svg, Object.assign({}, constants_1.defaultWebpShorthandOptions, options));
+    };
+};
+exports.from = (svg) => {
     return {
-        to: to(input)
+        to: to(svg),
+        toPng: toPng(svg),
+        toJpeg: toJpeg(svg),
+        toWebp: toWebp(svg)
     };
 };

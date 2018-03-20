@@ -1,8 +1,8 @@
+import * as fs from "fs";
 import * as puppeteer from "puppeteer";
-import { ScreenshotOptions } from "puppeteer";
-import { defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, config } from "./constants";
-import { getFileTypeFromPath, getNaturalSvgDimensions, embedSvgInBody, stringifyFunction, setStyle } from "./helpers";
-import { IOptions, IPngShorthandOptions, IJpegShorthandOptions } from "./typings/types";
+import { getFileTypeFromPath, renderSvg, stringifyFunction } from "./helpers";
+import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
+import { IOptions, IShorthandOptions } from "./typings/types";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
 let browserInstance: puppeteer.Browser|undefined;
@@ -10,7 +10,12 @@ let browserInstance: puppeteer.Browser|undefined;
 const getBrowser = async () => {
   clearTimeout(browserDestructionTimeout);
 
-  return (browserInstance = browserInstance ? browserInstance : await puppeteer.launch(config.puppeteer));
+  if (!browserInstance) {
+    browserInstance = await puppeteer.launch(config.puppeteer);
+    await browserInstance.newPage();
+  }
+
+  return browserInstance;
 };
 
 const scheduleBrowserForDestruction = () => {
@@ -24,69 +29,51 @@ const scheduleBrowserForDestruction = () => {
   }, 1000);
 };
 
-const convertSvg = async (inputSvg: Buffer|string, options: IOptions): Promise<Buffer|string> => {
+const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Promise<Buffer|string> => {
   const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
-  const screenshotOptions = {...defaultOptions, ...options};
+  const options = {...defaultOptions, ...passedOptions};
   const browser = await getBrowser();
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0];
 
   // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
   await page.setOfflineMode(true);
 
-  // Get the natural dimensions of the SVG if they were not specified
-  if (!screenshotOptions.width && !screenshotOptions.height) {
-    const naturalSvgDimensions = await page.evaluate(stringifyFunction(getNaturalSvgDimensions, svg));
-
-    screenshotOptions.width = naturalSvgDimensions.width;
-    screenshotOptions.height = naturalSvgDimensions.height;
-  }
-
-  const currentSvgDimensions = await page.evaluate(stringifyFunction(embedSvgInBody, svg, screenshotOptions.width, screenshotOptions.height));
-
-  // Resize the viewport to mirror the in-browser SVG size
-  await page.setViewport({ width: currentSvgDimensions.width, height: currentSvgDimensions.height });
-
   // Infer the file type from the file path if no type is provided
-  if (!options.type && screenshotOptions.path) {
-    const fileType = getFileTypeFromPath(screenshotOptions.path);
+  if (!passedOptions.type && options.path) {
+    const fileType = getFileTypeFromPath(options.path);
 
     if (config.supportedImageTypes.includes(fileType)) {
-      screenshotOptions.type = fileType as ScreenshotOptions["type"];
+      options.type = fileType as IOptions["type"];
     }
   }
 
-  // The quality option is only applicable to jpeg images.
-  if (screenshotOptions.type !== "jpeg") {
-    delete screenshotOptions.quality;
-  }
-
-  await page.evaluate(stringifyFunction(setStyle, "body", {
-    margin: 0,
-    padding: 0
+  const base64 = await page.evaluate(stringifyFunction(renderSvg, svg, {
+    width: options.width,
+    height: options.height,
+    type: options.type,
+    quality: options.quality,
+    background: options.background,
+    clip: options.clip,
+    jpegBackground: config.jpegBackground
   }));
 
-  if (screenshotOptions.type === "jpeg") {
-    await page.evaluate(stringifyFunction(setStyle, "html", {
-      "background-color": config.jpegBackground
-    }));
-  }
-
-  if (screenshotOptions.background) {
-    await page.evaluate(stringifyFunction(setStyle, "body", {
-      "background-color": screenshotOptions.background
-    }));
-  }
-
-  const screenshot = await page.screenshot(screenshotOptions);
-
-  page.close(); // Closes the tab asynchronously (no await)
   scheduleBrowserForDestruction();
 
-  if (screenshotOptions.encoding) {
-    return screenshot.toString(screenshotOptions.encoding);
+  const buffer = Buffer.from(base64, "base64");
+
+  if (options.path) {
+    fs.writeFileSync(options.path, buffer);
   }
 
-  return screenshot;
+  if (options.encoding === "base64") {
+    return base64;
+  }
+
+  if (!options.encoding) {
+    return buffer;
+  }
+
+  return buffer.toString(options.encoding);
 };
 
 const to = (svg: Buffer|string) => {
@@ -96,14 +83,20 @@ const to = (svg: Buffer|string) => {
 };
 
 const toPng = (svg: Buffer|string) => {
-  return async (options?: IPngShorthandOptions): Promise<Buffer|string> => {
+  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
     return convertSvg(svg, {...defaultPngShorthandOptions, ...options});
   };
 };
 
 const toJpeg = (svg: Buffer|string) => {
-  return async (options?: IJpegShorthandOptions): Promise<Buffer|string> => {
+  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
     return convertSvg(svg, {...defaultJpegShorthandOptions, ...options});
+  };
+};
+
+const toWebp = (svg: Buffer|string) => {
+  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
+    return convertSvg(svg, {...defaultWebpShorthandOptions, ...options});
   };
 };
 
@@ -111,6 +104,7 @@ export const from = (svg: Buffer|string) => {
   return {
     to: to(svg),
     toPng: toPng(svg),
-    toJpeg: toJpeg(svg)
+    toJpeg: toJpeg(svg),
+    toWebp: toWebp(svg)
   };
 };

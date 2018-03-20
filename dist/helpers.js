@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFileTypeFromPath = (path) => {
     return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
-exports.getSvgNaturalDimensions = async (svg) => {
+exports.getNaturalSvgDimensions = async (svg) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
         const blob = new Blob([svg], { type: "image/svg+xml;charset=utf8" });
@@ -28,6 +28,7 @@ exports.embedSvgInBody = async (rawSvg, width, height) => {
         if (!svg) {
             return;
         }
+        // Set preserveAspectRatio to none to allow the SVG to be resized to any dimensions
         svg.setAttribute("preserveAspectRatio", "none");
         const img = new Image();
         const blob = new Blob([sandbox.innerHTML], { type: "image/svg+xml;charset=utf8" });
@@ -35,7 +36,10 @@ exports.embedSvgInBody = async (rawSvg, width, height) => {
         img.style.height = height;
         img.src = URL.createObjectURL(blob);
         img.addEventListener("load", () => {
-            resolve();
+            resolve({
+                width: img.clientWidth,
+                height: img.clientHeight
+            });
         });
         img.addEventListener("error", () => {
             reject(new Error("Malformed SVG"));
@@ -43,7 +47,7 @@ exports.embedSvgInBody = async (rawSvg, width, height) => {
         document.body.appendChild(img);
     });
 };
-exports.convertFunctionToString = (func, ...argsArray) => {
+exports.stringifyFunction = (func, ...argsArray) => {
     // Remove istanbul coverage instruments
     const functionString = func.toString().replace(/cov_(.+?)\+\+[,;]?/g, "");
     const args = [];

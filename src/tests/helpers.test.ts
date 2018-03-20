@@ -1,4 +1,4 @@
-import { getFileTypeFromPath, getNaturalSvgDimensions, embedSvgInBody, stringifyFunction, setStyle } from "../helpers";
+import { getFileTypeFromPath, stringifyFunction } from "../helpers";
 
 // Mock URL.createObjectURL(blob);
 Object.defineProperty(URL, "createObjectURL", {
@@ -32,30 +32,9 @@ describe("Helper functions", () => {
     expect(fileType).toBe("jpeg");
   });
 
-  test("Get SVG natural dimensions", async () => {
-    const dimensions = await getNaturalSvgDimensions("<svg xmlns='http://www.w3.org/2000/svg'/>");
-
-    expect(dimensions).toEqual({ height: 10, width: 10 });
-  });
-
-  test("Embed svg in body", async () => {
-    const expectedOutput = `<img src="blob:null/f2747239-6dc7-48bf-80c8-dd0ae9f70d7f">`;
-    await embedSvgInBody("<svg/>", "10", "10");
-
-    expect(document.body.innerHTML).toEqual(expectedOutput);
-  });
-
   test("Stringify function", async () => {
     const func = stringifyFunction((str: string, obj: object, num: number) => str + obj + num, "a", {a: 1}, 1);
 
     expect(func).toEqual(`((str, obj, num) => str + obj + num)(\`a\`,{"a":1},1)`);
-  });
-
-  test("Set style", async () => {
-    await setStyle("body", {
-      background: "rgb(0, 153, 255)"
-    });
-
-    expect(document.body.style.backgroundColor).toEqual("rgb(0, 153, 255)");
   });
 });

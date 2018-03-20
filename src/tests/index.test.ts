@@ -84,6 +84,45 @@ describe("SVG to image conversion", () => {
     expect(md5(data)).toEqual("94aa9ee2cad3d0c6c665793d5cd7e55c");
   });
 
+  test("HEX encoded output", async () => {
+    const data = await svgToImg.from(svgString).to({
+      encoding: "hex"
+    });
+
+    expect(sizeOf(Buffer.from(data as string, "hex"))).toEqual({
+      type: "png",
+      width: 406,
+      height: 206
+    });
+    expect(md5(data)).toEqual("94aa9ee2cad3d0c6c665793d5cd7e55c");
+  });
+
+  test("JPEG compression", async () => {
+    const data = await svgToImg.from(svgBuffer).toJpeg({
+      quality: 0
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "jpg",
+      width: 406,
+      height: 206
+    });
+    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+  });
+
+  test("WEBP compression", async () => {
+    const data = await svgToImg.from(svgBuffer).toWebp({
+      quality: 0
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "webp",
+      width: 406,
+      height: 206
+    });
+    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+  });
+
   test("Custom width and height", async () => {
     const data = await svgToImg.from(svgString).to({
       width: 1000,
@@ -96,24 +135,6 @@ describe("SVG to image conversion", () => {
       height: 200
     });
     expect(md5(data)).toEqual("ce65eea472df3b38bae00d9e5e6e8f0d");
-  });
-
-  test("Clip the image", async () => {
-    const data = await svgToImg.from(svgBuffer).to({
-      clip: {
-        x: 10,
-        y: 10,
-        width: 100,
-        height: 100
-      }
-    });
-
-    expect(sizeOf(data as Buffer)).toEqual({
-      type: "png",
-      width: 100,
-      height: 100
-    });
-    expect(md5(data)).toEqual("448274496ea3fa97f7d110697af9a268");
   });
 
   test("Custom background color", async () => {
@@ -140,9 +161,7 @@ describe("SVG to image conversion", () => {
   });
 
   test("Responsive SVG (Infer natural dimensions)", async () => {
-    const data = await svgToImg.from(responsiveSvgBuffer).to({
-      type: "png"
-    });
+    const data = await svgToImg.from(responsiveSvgBuffer).toPng();
 
     expect(sizeOf(data as Buffer)).toEqual({
       type: "png",
@@ -200,6 +219,37 @@ describe("SVG to image conversion", () => {
     });
     expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
   });
+
+  test("SVG to WEBP shorthand", async () => {
+    const data = await svgToImg.from(responsiveSvgBuffer).toWebp();
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "webp",
+      width: 187,
+      height: 150
+    });
+    expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
+  });
+
+  /*
+  test("Clip the image", async () => {
+    const data = await svgToImg.from(svgBuffer).to({
+      clip: {
+        x: 10,
+        y: 10,
+        width: 100,
+        height: 100
+      }
+    });
+
+    expect(sizeOf(data as Buffer)).toEqual({
+      type: "png",
+      width: 100,
+      height: 100
+    });
+    expect(md5(data)).toEqual("448274496ea3fa97f7d110697af9a268");
+  });
+  */
 
   test("Wait for browser destruction", async (done) => {
     await svgToImg.from(responsiveSvgBuffer).toJpeg();

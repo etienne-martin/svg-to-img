@@ -1,12 +1,5 @@
-import { getFileTypeFromPath, stringifyFunction } from "../helpers";
-
-// Mock URL.createObjectURL(blob);
-Object.defineProperty(URL, "createObjectURL", {
-  writable: true,
-  value: jest.fn(() => {
-    return `blob:null/f2747239-6dc7-48bf-80c8-dd0ae9f70d7f`;
-  })
-});
+import { getFileTypeFromPath, stringifyFunction, renderSvg } from "../helpers";
+import { config } from "../constants";
 
 // Mock img.naturalWidth
 Object.defineProperty(HTMLImageElement.prototype, "naturalHeight", {
@@ -36,5 +29,28 @@ describe("Helper functions", () => {
     const func = stringifyFunction((str: string, obj: object, num: number) => str + obj + num, "a", {a: 1}, 1);
 
     expect(func).toEqual(`((str, obj, num) => str + obj + num)(\`a\`,{"a":1},1)`);
+  });
+
+  test("Render SVG", async () => {
+    const base64 = await renderSvg("<svg xmlns='http://www.w3.org/2000/svg'/>", {
+      width: 100,
+      height: 100,
+      type: "jpeg",
+      quality: 1,
+      background: "#09f",
+      jpegBackground: config.jpegBackground
+    });
+
+    expect(base64).toBe("");
+  });
+
+  test("Render SVG", async () => {
+    const base64 = await renderSvg("<svg xmlns='http://www.w3.org/2000/svg'/>", {
+      type: "png",
+      quality: 1,
+      jpegBackground: config.jpegBackground
+    });
+
+    expect(base64).toBe("");
   });
 });

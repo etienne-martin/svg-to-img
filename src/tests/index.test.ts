@@ -25,7 +25,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+    expect(md5(data)).toEqual("677e67f0c96c14a79032351d5691bcb2");
   });
 
   test("From string to image", async () => {
@@ -38,7 +38,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("9adf5c77f2851ee4a3bdfddea3bb501e");
+    expect(md5(data)).toEqual("7c310bf3a7267c656d926ce5c8a1c365");
   });
 
   test("Infer file type from file extension", async () => {
@@ -53,7 +53,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+    expect(md5(data)).toEqual("677e67f0c96c14a79032351d5691bcb2");
   });
 
   test("Unknown file extension", async () => {
@@ -68,7 +68,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("9adf5c77f2851ee4a3bdfddea3bb501e");
+    expect(md5(data)).toEqual("7c310bf3a7267c656d926ce5c8a1c365");
   });
 
   test("Base64 encoded output", async () => {
@@ -81,7 +81,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("94aa9ee2cad3d0c6c665793d5cd7e55c");
+    expect(md5(data)).toEqual("d8d4ae8a0824a579c7ca32a7ee93a678");
   });
 
   test("HEX encoded output", async () => {
@@ -94,7 +94,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("94aa9ee2cad3d0c6c665793d5cd7e55c");
+    expect(md5(data)).toEqual("dd8d4c070bb6db33ad15ace8dd56e61c");
   });
 
   test("JPEG compression", async () => {
@@ -107,7 +107,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+    expect(md5(data)).toEqual("435447377ac681b187d8d55a65ea6b37");
   });
 
   test("WEBP compression", async () => {
@@ -120,7 +120,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("3ecce9756c3d9d121fe17d04eba596ed");
+    expect(md5(data)).toEqual("b5a88a19087b48e6aafacf688699ff0a");
   });
 
   test("Custom width and height", async () => {
@@ -134,7 +134,7 @@ describe("SVG to image conversion", () => {
       width: 1000,
       height: 200
     });
-    expect(md5(data)).toEqual("ce65eea472df3b38bae00d9e5e6e8f0d");
+    expect(md5(data)).toEqual("35053a5b747abffa7cb1aba24bbbd603");
   });
 
   test("Custom background color", async () => {
@@ -147,7 +147,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("481c7be3721221d3e0a00f9878203961");
+    expect(md5(data)).toEqual("f7c37d538eb948f6609d15d871b3f078");
   });
 
   test("Malformed SVG", async () => {
@@ -168,7 +168,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("e6a2add8e60d48ad5163c13e3889bb5d");
+    expect(md5(data)).toEqual("a35bb124b354bb861a6b65118ff16dde");
   });
 
   test("Resize responsive SVG (Squashed)", async () => {
@@ -182,7 +182,7 @@ describe("SVG to image conversion", () => {
       width: 300,
       height: 100
     });
-    expect(md5(data)).toEqual("4dcd300b271bb33172af00383e20d420");
+    expect(md5(data)).toEqual("f6571224da1e85780c7dc0ea66b7c95c");
   });
 
   test("Resize responsive SVG (Proportionally)", async () => {
@@ -195,7 +195,7 @@ describe("SVG to image conversion", () => {
       width: 300,
       height: 241
     });
-    expect(md5(data)).toEqual("40bd56d9e947ce0df2aa4493a23ceef9");
+    expect(md5(data)).toEqual("1245ca2a1868e5148d0bbeacc0245d25");
   });
 
   test("SVG to PNG shorthand", async () => {
@@ -206,7 +206,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("e6a2add8e60d48ad5163c13e3889bb5d");
+    expect(md5(data)).toEqual("a35bb124b354bb861a6b65118ff16dde");
   });
 
   test("SVG to JPEG shorthand", async () => {
@@ -217,7 +217,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
+    expect(md5(data)).toEqual("da0a53cd944c1fbd56a64684969882cd");
   });
 
   test("SVG to WEBP shorthand", async () => {
@@ -228,7 +228,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("8859d6c304b215bc09bc8c661cfa1934");
+    expect(md5(data)).toEqual("b1080b283475987c0d57dd16a9f19288");
   });
 
   /*

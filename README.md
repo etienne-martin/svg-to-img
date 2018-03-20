@@ -16,7 +16,7 @@
 To use svg-to-img in your project, run:
 
 ```bash
-npm i --save svg-to-img
+npm install svg-to-img -S
 ```
 
 Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library.

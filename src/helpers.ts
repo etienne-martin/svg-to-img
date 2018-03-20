@@ -30,7 +30,7 @@ export const renderSvg = async (svg: string, options: {
   height?: IOptions["height"];
   type: IOptions["type"];
   quality: IOptions["quality"];
-  background: IOptions["background"];
+  background?: IOptions["background"];
   jpegBackground: string;
 }) => {
   return new Promise((resolve, reject) => {
@@ -38,6 +38,7 @@ export const renderSvg = async (svg: string, options: {
     const ctx = canvas.getContext("2d");
     const img = new Image();
 
+    /* istanbul ignore if */
     if (!ctx) {
       return reject(new Error("Canvas not supported"));
     }

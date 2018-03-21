@@ -1,6 +1,5 @@
-import * as fs from "fs";
 import * as puppeteer from "puppeteer";
-import { getFileTypeFromPath, renderSvg, stringifyFunction } from "./helpers";
+import { getFileTypeFromPath, renderSvg, stringifyFunction, writeFileAsync } from "./helpers";
 import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
 import { IOptions, IShorthandOptions } from "./typings/types";
 
@@ -33,7 +32,7 @@ const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Pro
   const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
   const options = {...defaultOptions, ...passedOptions};
   const browser = await getBrowser();
-  const page = (await browser.pages())[0];
+  const page = (await browser.pages())[1];
 
   // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
   await page.setOfflineMode(true);
@@ -62,7 +61,7 @@ const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Pro
   const buffer = Buffer.from(base64, "base64");
 
   if (options.path) {
-    fs.writeFileSync(options.path, buffer);
+    await writeFileAsync(options.path, buffer);
   }
 
   if (options.encoding === "base64") {

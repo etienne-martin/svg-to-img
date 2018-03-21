@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
 exports.getFileTypeFromPath = (path) => {
     return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
@@ -20,6 +21,16 @@ exports.stringifyFunction = (func, ...argsArray) => {
         }
     }
     return `(${functionString})(${args.join(",")})`;
+};
+exports.writeFileAsync = async (path, data) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path, data, (err) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve();
+        });
+    });
 };
 exports.renderSvg = async (svg, options) => {
     return new Promise((resolve, reject) => {
@@ -62,8 +73,9 @@ exports.renderSvg = async (svg, options) => {
                 ctx.fillStyle = options.background;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
-            // Clip the image
+            // Draw the image
             if (options.clip) {
+                // Clipped image
                 ctx.drawImage(img, options.clip.x, options.clip.y, options.clip.width, options.clip.height, 0, 0, options.clip.width, options.clip.height);
             }
             else {
@@ -71,8 +83,8 @@ exports.renderSvg = async (svg, options) => {
             }
             const dataURI = canvas.toDataURL("image/" + options.type, options.quality);
             const base64 = dataURI.substr(`data:image/${options.type};base64,`.length);
-            resolve(base64);
             document.body.removeChild(img);
+            resolve(base64);
         });
         img.addEventListener("error", () => {
             reject(new Error("Malformed SVG"));

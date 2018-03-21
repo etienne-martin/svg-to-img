@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { IOptions, IBoundingBox } from "./typings/types";
 
 export const getFileTypeFromPath = (path: string) => {
@@ -23,6 +24,16 @@ export const stringifyFunction = (func: any, ...argsArray: any[]) => {
   }
 
   return `(${functionString})(${args.join(",")})`;
+};
+
+export const writeFileAsync = async (path: string, data: Buffer) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, data, (err: Error) => {
+      if (err) { return reject(err); }
+
+      resolve();
+    });
+  });
 };
 
 export const renderSvg = async (svg: string, options: {
@@ -52,7 +63,7 @@ export const renderSvg = async (svg: string, options: {
       img.height = options.height;
     }
 
-    img.addEventListener("load", () => {
+    const onLoad = () => {
       let imageWidth = img.naturalWidth;
       let imageHeight = img.naturalHeight;
 
@@ -106,11 +117,15 @@ export const renderSvg = async (svg: string, options: {
 
       document.body.removeChild(img);
       resolve(base64);
-    });
+    };
 
-    img.addEventListener("error", () => {
+    const onError = () => {
+      document.body.removeChild(img);
       reject(new Error("Malformed SVG"));
-    });
+    };
+
+    img.addEventListener("load", onLoad);
+    img.addEventListener("error", onError);
 
     document.body.appendChild(img);
     img.src = "data:image/svg+xml;charset=utf8," + svg;

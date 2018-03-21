@@ -1,9 +1,13 @@
-import { getFileTypeFromPath, stringifyFunction, renderSvg } from "../helpers";
+import { getFileTypeFromPath, stringifyFunction, renderSvg, writeFileAsync } from "../helpers";
 import { config } from "../constants";
 
-// Mock img.addEventListener("onload", () => {});
-Element.prototype.addEventListener = jest.fn((event, callback) => {
-  setTimeout(callback, 100);
+beforeEach(() => {
+  // Mock img.addEventListener("load|error", () => {});
+  Element.prototype.addEventListener = jest.fn((event, callback) => {
+    if (event === "load") {
+      setTimeout(callback, 10);
+    }
+  });
 });
 
 describe("Helper functions", () => {
@@ -56,5 +60,35 @@ describe("Helper functions", () => {
     });
 
     expect(base64).toBe("");
+  });
+
+  test("Malformed SVG", async () => {
+    Element.prototype.addEventListener = jest.fn((event, callback) => {
+      if (event === "error") {
+        setTimeout(callback, 10);
+      }
+    });
+
+    try {
+      await renderSvg("THIS IS NO SVG", {
+        type: "png",
+        quality: 1,
+        jpegBackground: config.jpegBackground
+      });
+    } catch (error) {
+      expect(error.message).toContain("Malformed SVG");
+    }
+  });
+
+  test("Write file asynchronously", async () => {
+    let errorThrown = false;
+
+    try {
+      await writeFileAsync("...//NOT-A-VALID-PATH//...", Buffer.from("dummy-data", "utf8"));
+    } catch {
+      errorThrown = true;
+    }
+
+    expect(errorThrown).toEqual(true);
   });
 });

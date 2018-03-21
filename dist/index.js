@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
 const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
@@ -50,7 +49,7 @@ const convertSvg = async (inputSvg, passedOptions) => {
     scheduleBrowserForDestruction();
     const buffer = Buffer.from(base64, "base64");
     if (options.path) {
-        fs.writeFileSync(options.path, buffer);
+        await helpers_1.writeFileAsync(options.path, buffer);
     }
     if (options.encoding === "base64") {
         return base64;

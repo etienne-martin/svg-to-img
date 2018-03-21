@@ -43,7 +43,7 @@ describe("Helper functions", () => {
       jpegBackground: config.jpegBackground
     });
 
-    expect(base64).toBe("");
+    expect(base64).toBe("1");
   });
 
   test("Render SVG with clipping options", async () => {

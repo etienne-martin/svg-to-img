@@ -28,6 +28,12 @@
     "prebuild": "rm -rf dist/ && npm run lint",
     "build": "tsc --pretty"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test",
+      "pre-push": "npm run build"
+    }
+  },
   "jest": {
     "setupFiles": [
       "jest-canvas-mock"
@@ -93,6 +99,7 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
+    "husky": "^0.14.3",
     "puppeteer": "^1.1.1"
   }
 }

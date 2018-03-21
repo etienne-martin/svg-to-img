@@ -147,9 +147,7 @@ When contributing to this project, please first discuss the change you wish to m
 
 Update the [README.md](https://github.com/etienne-martin/svg-to-img/blob/master/README.md) with details of changes to the library.
 
-Execute `npm run test` on the command line to test your changes.
-
-Build the project and update the [tests](https://github.com/etienne-martin/svg-to-img/tree/master/src/tests) before submitting your pull request.
+Execute `npm run test` and update the [tests](https://github.com/etienne-martin/svg-to-img/tree/master/src/tests) if needed.
 
 ## Authors
 

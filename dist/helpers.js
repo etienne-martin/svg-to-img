@@ -47,7 +47,7 @@ exports.renderSvg = async (svg, options) => {
         if (options.height) {
             img.height = options.height;
         }
-        img.addEventListener("load", () => {
+        const onLoad = () => {
             let imageWidth = img.naturalWidth;
             let imageHeight = img.naturalHeight;
             if (options.width || options.height) {
@@ -85,10 +85,13 @@ exports.renderSvg = async (svg, options) => {
             const base64 = dataURI.substr(`data:image/${options.type};base64,`.length);
             document.body.removeChild(img);
             resolve(base64);
-        });
-        img.addEventListener("error", () => {
+        };
+        const onError = () => {
+            document.body.removeChild(img);
             reject(new Error("Malformed SVG"));
-        });
+        };
+        img.addEventListener("load", onLoad);
+        img.addEventListener("error", onError);
         document.body.appendChild(img);
         img.src = "data:image/svg+xml;charset=utf8," + svg;
     });

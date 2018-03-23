@@ -5,7 +5,6 @@ exports.getFileTypeFromPath = (path) => {
     return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
 exports.stringifyFunction = (func, ...argsArray) => {
-    // Remove istanbul coverage instruments
     const functionString = func.toString().replace(/cov_(.+?)\+\+[,;]?/g, "");
     const args = [];
     for (const argument of argsArray) {
@@ -37,7 +36,6 @@ exports.renderSvg = async (svg, options) => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const img = new Image();
-        /* istanbul ignore if */
         if (!ctx) {
             return reject(new Error("Canvas not supported"));
         }
@@ -63,19 +61,15 @@ exports.renderSvg = async (svg, options) => {
                 canvas.width = imageWidth;
                 canvas.height = imageHeight;
             }
-            // Set default background color
             if (options.type === "jpeg") {
                 ctx.fillStyle = options.jpegBackground;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
-            // Set background color
             if (options.background) {
                 ctx.fillStyle = options.background;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
-            // Draw the image
             if (options.clip) {
-                // Clipped image
                 ctx.drawImage(img, options.clip.x, options.clip.y, options.clip.width, options.clip.height, 0, 0, options.clip.width, options.clip.height);
             }
             else {

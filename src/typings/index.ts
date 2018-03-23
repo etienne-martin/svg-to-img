@@ -7,15 +7,15 @@ export interface IBoundingBox {
 
 export interface IOptions {
   path?: string;
-  type?: "jpeg"|"png"|"webp";
+  type?: "jpeg" | "png" | "webp";
   quality?: number;
   width?: number;
   height?: number;
   clip?: IBoundingBox;
   background?: string;
-  encoding?: "base64"|"utf8"|"binary"|"hex";
+  encoding?: "base64" | "utf8" | "binary" | "hex";
 }
 
-export interface IShorthandOptions extends IOptions  {
+export interface IShorthandOptions extends IOptions {
   type?: never;
 }

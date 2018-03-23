@@ -26,7 +26,8 @@
     "test:watch": "jest src --coverage --verbose --watch",
     "coverage": "coveralls < ./coverage/lcov.info",
     "prebuild": "rm -rf dist/ && npm run lint",
-    "build": "tsc --pretty"
+    "build": "tsc --pretty",
+    "prepublish": "npm run build"
   },
   "husky": {
     "hooks": {

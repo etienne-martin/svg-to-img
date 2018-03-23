@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { IOptions, IBoundingBox } from "./typings/types";
+import { IBoundingBox, IOptions } from "./typings";
 
 export const getFileTypeFromPath = (path: string) => {
   return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];

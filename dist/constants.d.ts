@@ -1,4 +1,4 @@
-import { IOptions } from "./typings/types";
+import { IOptions } from "./typings";
 export declare const config: {
     supportedImageTypes: string[];
     jpegBackground: string;

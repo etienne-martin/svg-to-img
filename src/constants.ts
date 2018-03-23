@@ -1,4 +1,4 @@
-import { IOptions } from "./typings/types";
+import { IOptions } from "./typings";
 
 export const config = {
   supportedImageTypes: ["jpeg", "png", "webp"],

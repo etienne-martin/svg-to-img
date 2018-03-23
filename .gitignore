@@ -59,4 +59,5 @@ jspm_packages/
 
 # Ignore test-generated images
 src/tests/img/*
-dist/tests/
+
+dist/typings/index.js

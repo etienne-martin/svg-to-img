@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { IBoundingBox } from "./typings/types";
+import { IBoundingBox } from "./typings";
 export declare const getFileTypeFromPath: (path: string) => string;
 export declare const stringifyFunction: (func: any, ...argsArray: any[]) => string;
 export declare const writeFileAsync: (path: string, data: Buffer) => Promise<{}>;

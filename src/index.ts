@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import { getFileTypeFromPath, renderSvg, stringifyFunction, writeFileAsync } from "./helpers";
 import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
-import { IOptions, IShorthandOptions } from "./typings/types";
+import { IOptions, IShorthandOptions } from "./typings";
 
 let browserDestructionTimeout: any; // TODO: add proper typing
 let browserInstance: puppeteer.Browser|undefined;

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
-let browserDestructionTimeout;
+let browserDestructionTimeout; // TODO: add proper typing
 let browserInstance;
 const getBrowser = async () => {
     clearTimeout(browserDestructionTimeout);
@@ -16,8 +16,9 @@ const getBrowser = async () => {
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
     browserDestructionTimeout = setTimeout(() => {
+        /* istanbul ignore next */
         if (browserInstance) {
-            browserInstance.close();
+            browserInstance.close(); // Closes the browser asynchronously (no await)
             browserInstance = undefined;
         }
     }, 1000);
@@ -27,7 +28,9 @@ const convertSvg = async (inputSvg, passedOptions) => {
     const options = Object.assign({}, constants_1.defaultOptions, passedOptions);
     const browser = await getBrowser();
     const page = (await browser.pages())[1];
+    // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
     await page.setOfflineMode(true);
+    // Infer the file type from the file path if no type is provided
     if (!passedOptions.type && options.path) {
         const fileType = helpers_1.getFileTypeFromPath(options.path);
         if (constants_1.config.supportedImageTypes.includes(fileType)) {

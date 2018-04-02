@@ -3,31 +3,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
+const queue = [];
 let browserDestructionTimeout; // TODO: add proper typing
 let browserInstance;
-const getBrowser = async () => {
-    clearTimeout(browserDestructionTimeout);
-    if (!browserInstance) {
-        browserInstance = await puppeteer.launch(constants_1.config.puppeteer);
-        await browserInstance.newPage();
+let browserState = "closed";
+const executeQueuedRequests = (browser) => {
+    for (const resolve of queue) {
+        resolve(browser);
     }
-    return browserInstance;
+    // Clear items from the queue
+    queue.length = 0;
+};
+const getBrowser = async () => {
+    return new Promise(async (resolve) => {
+        clearTimeout(browserDestructionTimeout);
+        if (browserState === "closed") {
+            // Browser is closed
+            queue.push(resolve);
+            browserState = "opening";
+            browserInstance = await puppeteer.launch(constants_1.config.puppeteer);
+            browserState = "open";
+            executeQueuedRequests(browserInstance);
+        }
+        /* istanbul ignore if */
+        if (browserState === "opening") {
+            // Queue request and wait for the browser to open
+            queue.push(resolve);
+        }
+        /* istanbul ignore next */
+        if (browserState === "open") {
+            // Browser is already open
+            if (browserInstance) {
+                resolve(browserInstance);
+            }
+        }
+    });
 };
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
-    browserDestructionTimeout = setTimeout(() => {
+    browserDestructionTimeout = setTimeout(async () => {
         /* istanbul ignore next */
         if (browserInstance) {
-            browserInstance.close(); // Closes the browser asynchronously (no await)
-            browserInstance = undefined;
+            browserState = "closed";
+            await browserInstance.close();
         }
-    }, 1000);
+    }, 500);
 };
 const convertSvg = async (inputSvg, passedOptions) => {
     const svg = Buffer.isBuffer(inputSvg) ? inputSvg.toString("utf8") : inputSvg;
     const options = Object.assign({}, constants_1.defaultOptions, passedOptions);
     const browser = await getBrowser();
-    const page = (await browser.pages())[1];
+    const page = (await browser.pages())[0];
     // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
     await page.setOfflineMode(true);
     // Infer the file type from the file path if no type is provided

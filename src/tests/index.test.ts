@@ -256,6 +256,24 @@ describe("SVG to image conversion", () => {
       done();
     }, 2000);
   });
+
+  test("Test multiple requests in parallel", async (done) => {
+    let errors = 0;
+
+    for (let i = 0; i < 10; i++) {
+      try {
+        await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+      } catch (error) {
+        console.log(error);
+        errors++;
+      }
+    }
+
+    setTimeout(() => {
+      expect(errors).toBe(0);
+      done();
+    }, 1000);
+  });
 });
 
 // Kill any remaining Chromium instances

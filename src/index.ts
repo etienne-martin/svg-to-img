@@ -27,20 +27,20 @@ const getBrowser = async (): Promise<puppeteer.Browser> => {
       browserInstance = await puppeteer.launch(config.puppeteer);
       browserState = "open";
 
-      executeQueuedRequests(browserInstance);
+      return executeQueuedRequests(browserInstance);
     }
 
     /* istanbul ignore if */
     if (browserState === "opening") {
       // Queue request and wait for the browser to open
-      queue.push(resolve);
+      return queue.push(resolve);
     }
 
     /* istanbul ignore next */
     if (browserState === "open") {
       // Browser is already open
       if (browserInstance) {
-        resolve(browserInstance);
+        return resolve(browserInstance);
       }
     }
   });

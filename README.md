@@ -7,7 +7,7 @@
 [![CircleCI build](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg)](https://circleci.com/gh/etienne-martin/svg-to-img)
 [![node version](https://img.shields.io/node/v/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)
 [![npm version](https://img.shields.io/npm/v/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)
-[![npm weekly downloads](https://img.shields.io/npm/dw/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)
+[![npm monthly downloads](https://img.shields.io/npm/dm/svg-to-img.svg)](https://www.npmjs.com/package/svg-to-img)
 
 ## Getting Started
 

@@ -70,7 +70,8 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.(tsx|ts)"
-    ]
+    ],
+    "testURL": "http://localhost"
   },
   "repository": {
     "type": "git",
@@ -85,22 +86,22 @@
   "license": "MIT",
   "devDependencies": {
     "@types/image-size": "0.0.29",
-    "@types/jest": "^22.2.0",
-    "@types/puppeteer": "^1.1.0",
-    "@types/rimraf": "^2.0.2",
-    "coveralls": "^3.0.0",
-    "husky": "^0.15.0-rc.9",
-    "image-size": "^0.6.2",
-    "jest": "^22.4.2",
-    "jest-canvas-mock": "^1.0.2",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^22.4.1",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "^1.7.0",
-    "tslint-eslint-rules": "^4.1.1",
-    "typescript": "^2.7.2"
+    "@types/jest": "22.2.3",
+    "@types/puppeteer": "1.10.1",
+    "@types/rimraf": "2.0.2",
+    "coveralls": "3.0.2",
+    "husky": "0.15.0-rc.13",
+    "image-size": "0.6.3",
+    "jest": "22.4.4",
+    "jest-canvas-mock": "1.1.0",
+    "rimraf": "2.6.2",
+    "ts-jest": "22.4.6",
+    "tslint": "5.11.0",
+    "tslint-config-prettier": "1.17.0",
+    "tslint-eslint-rules": "4.1.1",
+    "typescript": "2.9.2"
   },
   "dependencies": {
-    "puppeteer": "^1.1.1"
+    "puppeteer": "1.1.1"
   }
 }

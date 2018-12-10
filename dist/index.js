@@ -4,7 +4,7 @@ const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
 const queue = [];
-let browserDestructionTimeout; // TODO: add proper typing
+let browserDestructionTimeout;
 let browserInstance;
 let browserState = "closed";
 const executeQueuedRequests = (browser) => {
@@ -41,7 +41,7 @@ const getBrowser = async () => {
 };
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
-    browserDestructionTimeout = setTimeout(async () => {
+    browserDestructionTimeout = window.setTimeout(async () => {
         /* istanbul ignore next */
         if (browserInstance) {
             browserState = "closed";

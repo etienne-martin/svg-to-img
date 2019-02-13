@@ -27,7 +27,7 @@
     "coverage": "coveralls < ./coverage/lcov.info",
     "prebuild": "rm -rf dist/ && npm run lint",
     "build": "tsc --pretty",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "husky": {
     "hooks": {

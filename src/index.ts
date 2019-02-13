@@ -4,7 +4,7 @@ import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthan
 import { IOptions, IShorthandOptions } from "./typings";
 
 const queue: Array<(result: puppeteer.Browser) => void> = [];
-let browserDestructionTimeout: number;
+let browserDestructionTimeout: NodeJS.Timeout;
 let browserInstance: puppeteer.Browser|undefined;
 let browserState: "closed"|"opening"|"open" = "closed";
 

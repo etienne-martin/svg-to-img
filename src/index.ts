@@ -4,7 +4,7 @@ import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthan
 import { IOptions, IShorthandOptions } from "./typings";
 
 const queue: Array<(result: puppeteer.Browser) => void> = [];
-let browserDestructionTimeout: number;
+let browserDestructionTimeout: NodeJS.Timeout;
 let browserInstance: puppeteer.Browser|undefined;
 let browserState: "closed"|"opening"|"open" = "closed";
 
@@ -48,7 +48,7 @@ const getBrowser = async (): Promise<puppeteer.Browser> => {
 
 const scheduleBrowserForDestruction = () => {
   clearTimeout(browserDestructionTimeout);
-  browserDestructionTimeout = window.setTimeout(async () => {
+  browserDestructionTimeout = setTimeout(async () => {
     /* istanbul ignore next */
     if (browserInstance) {
       browserState = "closed";

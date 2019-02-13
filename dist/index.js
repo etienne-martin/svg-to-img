@@ -41,7 +41,7 @@ const getBrowser = async () => {
 };
 const scheduleBrowserForDestruction = () => {
     clearTimeout(browserDestructionTimeout);
-    browserDestructionTimeout = window.setTimeout(async () => {
+    browserDestructionTimeout = setTimeout(async () => {
         /* istanbul ignore next */
         if (browserInstance) {
             browserState = "closed";

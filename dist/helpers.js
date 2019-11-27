@@ -93,6 +93,6 @@ exports.renderSvg = async (svg, options) => {
         img.addEventListener("load", onLoad);
         img.addEventListener("error", onError);
         document.body.appendChild(img);
-        img.src = "data:image/svg+xml;charset=utf8," + svg;
+        img.src = "data:image/svg+xml;base64," + btoa(svg);
     });
 };

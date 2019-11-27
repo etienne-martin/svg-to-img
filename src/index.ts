@@ -3,136 +3,154 @@ import { getFileTypeFromPath, renderSvg, stringifyFunction, writeFileAsync } fro
 import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
 import { IOptions, IShorthandOptions } from "./typings";
 
-const queue: Array<(result: puppeteer.Browser) => void> = [];
-let browserDestructionTimeout: NodeJS.Timeout;
-let browserInstance: puppeteer.Browser|undefined;
-let browserState: "closed"|"opening"|"open" = "closed";
+// tslint:disable-next-line: max-classes-per-file
+export class BrowserSource {
+  private queue: Array<(result: puppeteer.Browser) => void> = [];
+  private browserDestructionTimeout: NodeJS.Timeout | undefined;
+  private browserInstance: puppeteer.Browser | undefined;
+  private browserState: "closed" | "opening" | "open" = "closed";
 
-const executeQueuedRequests = (browser: puppeteer.Browser) => {
-  for (const resolve of queue) {
-    resolve(browser);
-  }
-  // Clear items from the queue
-  queue.length = 0;
+  constructor (private readonly factory: () => Promise<puppeteer.Browser>) {}
+
+  public async getBrowser (): Promise<puppeteer.Browser> {
+    return new Promise(async (resolve: (result: puppeteer.Browser) => void) => {
+      /* istanbul ignore if */
+      if (this.browserDestructionTimeout) {
+        clearTimeout(this.browserDestructionTimeout);
+      }
+
+      /* istanbul ignore else */
+      if (this.browserState === "closed") {
+        // Browser is closed
+        this.queue.push(resolve);
+        this.browserState = "opening";
+        this.browserInstance = await this.factory();
+        this.browserState = "open";
+
+        return this.executeQueuedRequests(this.browserInstance);
+      }
+
+      /* istanbul ignore next */
+      if (this.browserState === "opening") {
+        // Queue request and wait for the browser to open
+        return this.queue.push(resolve);
+      }
+
+      /* istanbul ignore next */
+      if (this.browserState === "open") {
+        // Browser is already open
+        if (this.browserInstance) {
+          return resolve(this.browserInstance);
+        }
+      }
+    });
+  };
+
+  public scheduleBrowserForDestruction () {
+    /* istanbul ignore if */
+    if (this.browserDestructionTimeout) {
+      clearTimeout(this.browserDestructionTimeout);
+    }
+    this.browserDestructionTimeout = setTimeout(async () => {
+      /* istanbul ignore next */
+      if (this.browserInstance) {
+        this.browserState = "closed";
+        await this.browserInstance.close();
+      }
+    }, 500);
+  };
+
+  private executeQueuedRequests (browser: puppeteer.Browser) {
+    for (const resolve of this.queue) {
+      resolve(browser);
+    }
+    // Clear items from the queue
+    this.queue.length = 0;
+  };
 };
 
-const getBrowser = async (): Promise<puppeteer.Browser> => {
-  return new Promise(async (resolve: (result: puppeteer.Browser) => void) => {
-    clearTimeout(browserDestructionTimeout);
+// tslint:disable-next-line: max-classes-per-file
+class SvgToImg {
 
-    if (browserState === "closed") {
-      // Browser is closed
-      queue.push(resolve);
-      browserState = "opening";
-      browserInstance = await puppeteer.launch(config.puppeteer);
-      browserState = "open";
+  constructor (private readonly svg: Buffer|string, private browserSource: BrowserSource) {}
 
-      return executeQueuedRequests(browserInstance);
-    }
+  public async to (options: IOptions): Promise<Buffer|string> {
+    return this.convertSvg(this.svg, options, this.browserSource);
+  };
 
-    /* istanbul ignore if */
-    if (browserState === "opening") {
-      // Queue request and wait for the browser to open
-      return queue.push(resolve);
-    }
+  public async toPng (options?: IShorthandOptions): Promise<Buffer|string> {
+    return this.convertSvg(this.svg, {...defaultPngShorthandOptions, ...options}, this.browserSource);
+  };
 
-    /* istanbul ignore next */
-    if (browserState === "open") {
-      // Browser is already open
-      if (browserInstance) {
-        return resolve(browserInstance);
+  public async toJpeg (options?: IShorthandOptions): Promise<Buffer|string> {
+    return this.convertSvg(this.svg, {...defaultJpegShorthandOptions, ...options}, this.browserSource);
+  };
+
+  public async toWebp (options?: IShorthandOptions): Promise<Buffer|string> {
+    return this.convertSvg(this.svg, {...defaultWebpShorthandOptions, ...options}, this.browserSource);
+  };
+
+  private async convertSvg (inputSvg: Buffer|string, passedOptions: IOptions, browserSource: BrowserSource): Promise<Buffer|string> {
+    const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
+    const options = {...defaultOptions, ...passedOptions};
+    const browser = await browserSource.getBrowser();
+    const page = (await browser.pages())[0];
+
+    // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
+    await page.setOfflineMode(true);
+
+    // Infer the file type from the file path if no type is provided
+    if (!passedOptions.type && options.path) {
+      const fileType = getFileTypeFromPath(options.path);
+
+      if (config.supportedImageTypes.includes(fileType)) {
+        options.type = fileType as IOptions["type"];
       }
     }
-  });
-};
 
-const scheduleBrowserForDestruction = () => {
-  clearTimeout(browserDestructionTimeout);
-  browserDestructionTimeout = setTimeout(async () => {
-    /* istanbul ignore next */
-    if (browserInstance) {
-      browserState = "closed";
-      await browserInstance.close();
+    const base64 = await page.evaluate(stringifyFunction(renderSvg, svg, {
+      width: options.width,
+      height: options.height,
+      type: options.type,
+      quality: options.quality,
+      background: options.background,
+      clip: options.clip,
+      jpegBackground: config.jpegBackground
+    }));
+
+    browserSource.scheduleBrowserForDestruction();
+
+    const buffer = Buffer.from(base64, "base64");
+
+    if (options.path) {
+      await writeFileAsync(options.path, buffer);
     }
-  }, 500);
-};
 
-const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Promise<Buffer|string> => {
-  const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
-  const options = {...defaultOptions, ...passedOptions};
-  const browser = await getBrowser();
-  const page = (await browser.pages())[0];
-
-  // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
-  await page.setOfflineMode(true);
-
-  // Infer the file type from the file path if no type is provided
-  if (!passedOptions.type && options.path) {
-    const fileType = getFileTypeFromPath(options.path);
-
-    if (config.supportedImageTypes.includes(fileType)) {
-      options.type = fileType as IOptions["type"];
+    if (options.encoding === "base64") {
+      return base64;
     }
-  }
 
-  const base64 = await page.evaluate(stringifyFunction(renderSvg, svg, {
-    width: options.width,
-    height: options.height,
-    type: options.type,
-    quality: options.quality,
-    background: options.background,
-    clip: options.clip,
-    jpegBackground: config.jpegBackground
-  }));
+    if (!options.encoding) {
+      return buffer;
+    }
 
-  scheduleBrowserForDestruction();
-
-  const buffer = Buffer.from(base64, "base64");
-
-  if (options.path) {
-    await writeFileAsync(options.path, buffer);
-  }
-
-  if (options.encoding === "base64") {
-    return base64;
-  }
-
-  if (!options.encoding) {
-    return buffer;
-  }
-
-  return buffer.toString(options.encoding);
-};
-
-const to = (svg: Buffer|string) => {
-  return async (options: IOptions): Promise<Buffer|string> => {
-    return convertSvg(svg, options);
+    return buffer.toString(options.encoding);
   };
-};
+}
 
-const toPng = (svg: Buffer|string) => {
-  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
-    return convertSvg(svg, {...defaultPngShorthandOptions, ...options});
+// tslint:disable-next-line: max-classes-per-file
+class SvgToImgBrowser {
+  constructor (private readonly browserSource: BrowserSource) {}
+  public from (svg: Buffer|string) {
+    return new SvgToImg(svg, this.browserSource);
   };
-};
-
-const toJpeg = (svg: Buffer|string) => {
-  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
-    return convertSvg(svg, {...defaultJpegShorthandOptions, ...options});
-  };
-};
-
-const toWebp = (svg: Buffer|string) => {
-  return async (options?: IShorthandOptions): Promise<Buffer|string> => {
-    return convertSvg(svg, {...defaultWebpShorthandOptions, ...options});
-  };
-};
+}
 
 export const from = (svg: Buffer|string) => {
-  return {
-    to: to(svg),
-    toPng: toPng(svg),
-    toJpeg: toJpeg(svg),
-    toWebp: toWebp(svg)
-  };
-};
+  return new SvgToImgBrowser(new BrowserSource(async () => puppeteer.launch(config.puppeteer))).from(svg);
+}
+
+/* istanbul ignore next */
+export const connect = (options?: puppeteer.ConnectOptions) => {
+  return new SvgToImgBrowser(new BrowserSource(async () => puppeteer.connect(options)));
+}

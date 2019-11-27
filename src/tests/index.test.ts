@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as svgToImg from "../index";
+import * as _svgToImg from "../index";
 import { md5 } from "./helpers";
 import * as rimraf from "rimraf";
 import * as sizeOf from "image-size";
@@ -9,6 +9,9 @@ const outputDir = "./src/tests/img";
 const svgBuffer = fs.readFileSync(`${inputDir}/camera.svg`);
 const responsiveSvgBuffer = fs.readFileSync(`${inputDir}/logo.svg`);
 const svgString = svgBuffer.toString("utf8");
+
+// const svgToImg = _svgToImg.connect({ browserWSEndpoint: "ws://localhost:3000" });
+const svgToImg = _svgToImg;
 
 // Create output directory
 rimraf.sync(outputDir);

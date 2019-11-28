@@ -70,7 +70,7 @@ export class BrowserSource {
 };
 
 // tslint:disable-next-line: max-classes-per-file
-class SvgToImg {
+class Svg {
 
   constructor (private readonly svg: Buffer|string, private browserSource: BrowserSource) {}
 
@@ -139,20 +139,20 @@ class SvgToImg {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-class SvgToImgBrowser {
+class SvgToImg {
   constructor (private readonly browserSource: BrowserSource) {}
   public from (svg: Buffer|string) {
-    return new SvgToImg(svg, this.browserSource);
+    return new Svg(svg, this.browserSource);
   };
 }
 
 const defaultBrowserSource = new BrowserSource(async () => puppeteer.launch(config.puppeteer));
 
 export const from = (svg: Buffer|string) => {
-  return new SvgToImgBrowser(defaultBrowserSource).from(svg);
+  return new SvgToImg(defaultBrowserSource).from(svg);
 }
 
 /* istanbul ignore next */
 export const connect = (options?: puppeteer.ConnectOptions) => {
-  return new SvgToImgBrowser(new BrowserSource(async () => puppeteer.connect(options)));
+  return new SvgToImg(new BrowserSource(async () => puppeteer.connect(options)));
 }

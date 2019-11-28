@@ -12,7 +12,7 @@ export declare class BrowserSource {
     scheduleBrowserForDestruction(): void;
     private executeQueuedRequests;
 }
-declare class SvgToImg {
+declare class Svg {
     private readonly svg;
     private browserSource;
     constructor(svg: Buffer | string, browserSource: BrowserSource);
@@ -22,11 +22,11 @@ declare class SvgToImg {
     toWebp(options?: IShorthandOptions): Promise<Buffer | string>;
     private convertSvg;
 }
-declare class SvgToImgBrowser {
+declare class SvgToImg {
     private readonly browserSource;
     constructor(browserSource: BrowserSource);
-    from(svg: Buffer | string): SvgToImg;
+    from(svg: Buffer | string): Svg;
 }
-export declare const from: (svg: string | Buffer) => SvgToImg;
-export declare const connect: (options?: puppeteer.ConnectOptions | undefined) => SvgToImgBrowser;
+export declare const from: (svg: string | Buffer) => Svg;
+export declare const connect: (options?: puppeteer.ConnectOptions | undefined) => SvgToImg;
 export {};

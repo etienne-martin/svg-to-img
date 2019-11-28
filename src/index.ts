@@ -30,6 +30,8 @@ export class BrowserSource {
 
           return this.executeQueuedRequests(this.browserInstance);
         } catch (error) {
+          this.browserState = "closed";
+
           return reject(error);
         }
       }

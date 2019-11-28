@@ -288,6 +288,22 @@ describe("SVG to image conversion", () => {
       done();
     }
   });
+
+  test("Propagates error when cannot connect with subsequent attempts", async (done) => {
+    const convert = svgToImg.connect({ browserWSEndpoint: "ws://localhost:12345" });
+    let errors = 0;
+    for (let i = 0; i < 10; i++) {
+      try {
+        await convert.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+        done.fail();
+      } catch (error) {
+        expect(error.message).toContain("ECONNREFUSED");
+        errors++;
+      }
+    }
+    expect(errors).toBe(10);
+    done();
+  });
 });
 
 // Kill any remaining Chromium instances

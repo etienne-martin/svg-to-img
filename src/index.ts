@@ -13,7 +13,7 @@ export class BrowserSource {
   constructor (private readonly factory: () => Promise<puppeteer.Browser>) {}
 
   public async getBrowser (): Promise<puppeteer.Browser> {
-    return new Promise(async (resolve: (result: puppeteer.Browser) => void) => {
+    return new Promise(async (resolve: (result: puppeteer.Browser) => void, reject: (err: any) => void) => {
       /* istanbul ignore if */
       if (this.browserDestructionTimeout) {
         clearTimeout(this.browserDestructionTimeout);
@@ -24,10 +24,14 @@ export class BrowserSource {
         // Browser is closed
         this.queue.push(resolve);
         this.browserState = "opening";
-        this.browserInstance = await this.factory();
-        this.browserState = "open";
+        try {
+          this.browserInstance = await this.factory();
+          this.browserState = "open";
 
-        return this.executeQueuedRequests(this.browserInstance);
+          return this.executeQueuedRequests(this.browserInstance);
+        } catch (error) {
+          return reject(error);
+        }
       }
 
       /* istanbul ignore next */

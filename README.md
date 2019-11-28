@@ -119,7 +119,7 @@ The method returns a svg instance based on the given argument.
 - `options` <[Object]> Pupetteer [connect options](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions) object which will typically contain a `browserWSEndpoint` property.
 - returns: <[SvgToImg]> an instance which is connected with the specified Puppeteer endpoint.
 
-Use this method if you want to connect to a running Puppeteer endpoint (see [here](https://github.com/etienne-martin/svg-to-img/issues/9)).
+Use this method if you want to connect to a running Puppeteer endpoint (see [here](https://github.com/etienne-martin/svg-to-img/issues/9)). Note that the actual connection is established lazily; this means this method will always return, even when the given `browserWSEndpoint` cannot be reached -- in this case, errors will be thrown later when calling one of the `to` functions.
 
 ### svg.to([options])
 - `options` <[Object]> Options object which might have the following properties:

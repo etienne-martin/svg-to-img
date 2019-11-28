@@ -11,7 +11,7 @@ class BrowserSource {
         this.browserState = "closed";
     }
     async getBrowser() {
-        return new Promise(async (resolve) => {
+        return new Promise(async (resolve, reject) => {
             /* istanbul ignore if */
             if (this.browserDestructionTimeout) {
                 clearTimeout(this.browserDestructionTimeout);
@@ -21,9 +21,14 @@ class BrowserSource {
                 // Browser is closed
                 this.queue.push(resolve);
                 this.browserState = "opening";
-                this.browserInstance = await this.factory();
-                this.browserState = "open";
-                return this.executeQueuedRequests(this.browserInstance);
+                try {
+                    this.browserInstance = await this.factory();
+                    this.browserState = "open";
+                    return this.executeQueuedRequests(this.browserInstance);
+                }
+                catch (error) {
+                    return reject(error);
+                }
             }
             /* istanbul ignore next */
             if (this.browserState === "opening") {

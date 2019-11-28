@@ -19,7 +19,7 @@ To use svg-to-img in your project, run:
 npm install svg-to-img -S
 ```
 
-Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library.
+Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library. If you want to skip downloading Chromium set the [`PUPPETEER_SKIP_CHROMIUM_DOWNLOAD`](https://github.com/puppeteer/puppeteer/blob/v2.0.0/docs/api.md#environment-variables) environment variable.
 
 #### Debian
 
@@ -92,6 +92,21 @@ const svgToImg = require("svg-to-img");
 })();
 ```
 
+**Example** - connect to Puppeteer `browserWSEndpoint`:
+
+```javascript
+const svgToImg = require("svg-to-img");
+const convert = svgToImg.connect({
+  browserWSEndpoint: "ws://localhost:3000"
+});
+
+(async () => {
+  const image = await convert.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+
+  console.log(image);
+})();
+```
+
 ## API Documentation
 
 ### svgToImg.from(svg)
@@ -99,6 +114,12 @@ const svgToImg = require("svg-to-img");
 - returns: <[Svg]> a new Svg object.
 
 The method returns a svg instance based on the given argument.
+
+### svgToImg.connect(options)
+- `options` <[Object]> Pupetteer [connect options](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions) object which will typically contain a `browserWSEndpoint` property.
+- returns: <[SvgToImg]> an instance which is connected with the specified Puppeteer endpoint.
+
+Use this method if you want to connect to a running Puppeteer endpoint (see [here](https://github.com/etienne-martin/svg-to-img/issues/9)).
 
 ### svg.to([options])
 - `options` <[Object]> Options object which might have the following properties:
@@ -152,6 +173,7 @@ Execute `npm run test` and update the [tests](https://github.com/etienne-martin/
 ## Authors
 
 * **Etienne Martin** - *Initial work* - [etiennemartin.ca](http://etiennemartin.ca/)
+* **Philipp Katz** - *Connect to browser endpoint* - [gitlab.com/qqilihq](https://gitlab.com/qqilihq)
 
 ## License
 

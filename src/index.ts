@@ -146,8 +146,10 @@ class SvgToImgBrowser {
   };
 }
 
+const defaultBrowserSource = new BrowserSource(async () => puppeteer.launch(config.puppeteer));
+
 export const from = (svg: Buffer|string) => {
-  return new SvgToImgBrowser(new BrowserSource(async () => puppeteer.launch(config.puppeteer))).from(svg);
+  return new SvgToImgBrowser(defaultBrowserSource).from(svg);
 }
 
 /* istanbul ignore next */

@@ -76,7 +76,7 @@ export class BrowserSource {
 };
 
 // tslint:disable-next-line: max-classes-per-file
-class Svg {
+export class Svg {
 
   constructor (private readonly svg: Buffer|string, private browserSource: BrowserSource) {}
 
@@ -145,7 +145,7 @@ class Svg {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-class SvgToImg {
+export class SvgToImg {
   constructor (private readonly browserSource: BrowserSource) {}
   public from (svg: Buffer|string) {
     return new Svg(svg, this.browserSource);

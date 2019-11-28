@@ -131,6 +131,7 @@ class Svg {
     }
     ;
 }
+exports.Svg = Svg;
 // tslint:disable-next-line: max-classes-per-file
 class SvgToImg {
     constructor(browserSource) {
@@ -141,6 +142,7 @@ class SvgToImg {
     }
     ;
 }
+exports.SvgToImg = SvgToImg;
 const defaultBrowserSource = new BrowserSource(async () => puppeteer.launch(constants_1.config.puppeteer));
 exports.from = (svg) => {
     return new SvgToImg(defaultBrowserSource).from(svg);

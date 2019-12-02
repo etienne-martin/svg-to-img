@@ -95,7 +95,12 @@ exports.renderSvg = async (svg, options) => {
         document.body.appendChild(img);
         // need to supply this base64-encoded, otherwise
         // we get the "Malformed SVG" error (see above)
-        // when running remotely via WebSocket connection
-        img.src = "data:image/svg+xml;base64," + btoa(svg);
+        // when running remotely via WebSocket connection;
+        // note that `btoa` only works on ASCII characters,
+        // that’s why we need the `unescape(encodeURIComponent(…))`
+        // workaround -- see here:
+        // https://stackoverflow.com/a/26603875
+        const base64Svg = btoa(unescape(encodeURIComponent(svg)));
+        img.src = "data:image/svg+xml;base64," + base64Svg;
     });
 };

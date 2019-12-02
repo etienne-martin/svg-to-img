@@ -302,6 +302,15 @@ describe("SVG to image conversion", () => {
     expect(errors).toBe(10);
     done();
   });
+
+  test("Special character encoding", async (done) => {
+    try {
+      await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'><text x='0' y='0'>äöüÄÖÜçéèñ</text></svg>").toPng();
+      done();
+    } catch (error) {
+      done.fail();
+    }
+  });
 });
 
 // Kill any remaining Chromium instances

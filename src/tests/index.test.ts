@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as _svgToImg from "../index";
+import * as svgToImg from "../index";
 import { md5 } from "./helpers";
 import * as rimraf from "rimraf";
 import * as sizeOf from "image-size";
@@ -9,9 +9,6 @@ const outputDir = "./src/tests/img";
 const svgBuffer = fs.readFileSync(`${inputDir}/camera.svg`);
 const responsiveSvgBuffer = fs.readFileSync(`${inputDir}/logo.svg`);
 const svgString = svgBuffer.toString("utf8");
-
-// const svgToImg = _svgToImg.connect({ browserWSEndpoint: "ws://localhost:3000" });
-const svgToImg = _svgToImg;
 
 // Create output directory
 rimraf.sync(outputDir);
@@ -280,8 +277,8 @@ describe("SVG to image conversion", () => {
   });
 
   test("Propagates error when cannot connect", async (done) => {
+    const convert = svgToImg.connect({ browserWSEndpoint: "ws://localhost:12345" })
     try {
-      const convert = svgToImg.connect({ browserWSEndpoint: "ws://localhost:12345" })
       await convert.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
       done.fail();
     } catch (error) {

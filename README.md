@@ -19,7 +19,7 @@ To use svg-to-img in your project, run:
 npm install svg-to-img -S
 ```
 
-Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library. If you want to skip downloading Chromium set the [`PUPPETEER_SKIP_CHROMIUM_DOWNLOAD`](https://github.com/puppeteer/puppeteer/blob/v2.0.0/docs/api.md#environment-variables) environment variable.
+Note: When you install svg-to-img, it downloads a recent version of Chromium (~170Mb Mac, ~282Mb Linux, ~280Mb Win) that is guaranteed to work with the library. If you want to skip downloading Chromium and instead [connect to a browser websocket endpoint](#svgtoimgconnectoptions), set the [`PUPPETEER_SKIP_CHROMIUM_DOWNLOAD`](https://github.com/puppeteer/puppeteer/blob/v2.0.0/docs/api.md#environment-variables) environment variable.
 
 #### Debian
 

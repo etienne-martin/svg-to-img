@@ -18,6 +18,9 @@
     "name": "Etienne Martin",
     "url": "http://etiennemartin.ca/"
   },
+  "contributors": [
+    "Philipp Katz (https://gitlab.com/qqilihq)"
+  ],
   "scripts": {
     "dev": "tsc --pretty --watch",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",

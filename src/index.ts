@@ -1,9 +1,8 @@
 import * as puppeteer from "puppeteer";
 import { getFileTypeFromPath, renderSvg, stringifyFunction, writeFileAsync } from "./helpers";
 import { config, defaultOptions, defaultPngShorthandOptions, defaultJpegShorthandOptions, defaultWebpShorthandOptions } from "./constants";
-import { IOptions, IShorthandOptions } from "./typings";
+import { IOptions, IShorthandOptions, IConnectOptions } from "./typings";
 
-// tslint:disable-next-line: max-classes-per-file
 export class BrowserSource {
   private queue: Array<(result: puppeteer.Browser) => void> = [];
   private browserDestructionTimeout: NodeJS.Timeout | undefined;
@@ -75,7 +74,6 @@ export class BrowserSource {
   };
 };
 
-// tslint:disable-next-line: max-classes-per-file
 export class Svg {
 
   constructor (private readonly svg: Buffer|string, private browserSource: BrowserSource) {}
@@ -144,7 +142,6 @@ export class Svg {
   };
 }
 
-// tslint:disable-next-line: max-classes-per-file
 export class SvgToImg {
   constructor (private readonly browserSource: BrowserSource) {}
   public from (svg: Buffer|string) {
@@ -159,6 +156,6 @@ export const from = (svg: Buffer|string) => {
 }
 
 /* istanbul ignore next */
-export const connect = (options?: puppeteer.ConnectOptions) => {
+export const connect = (options: IConnectOptions) => {
   return new SvgToImg(new BrowserSource(async () => puppeteer.connect(options)));
 }

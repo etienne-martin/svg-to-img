@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import * as puppeteer from "puppeteer";
-import { IOptions, IShorthandOptions } from "./typings";
+import { IOptions, IShorthandOptions, IConnectOptions } from "./typings";
 export declare class BrowserSource {
     private readonly factory;
     private queue;
@@ -28,4 +28,4 @@ export declare class SvgToImg {
     from(svg: Buffer | string): Svg;
 }
 export declare const from: (svg: string | Buffer) => Svg;
-export declare const connect: (options?: puppeteer.ConnectOptions | undefined) => SvgToImg;
+export declare const connect: (options: IConnectOptions) => SvgToImg;

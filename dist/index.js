@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
-// tslint:disable-next-line: max-classes-per-file
 class BrowserSource {
     constructor(factory) {
         this.factory = factory;
@@ -71,7 +70,6 @@ class BrowserSource {
 }
 exports.BrowserSource = BrowserSource;
 ;
-// tslint:disable-next-line: max-classes-per-file
 class Svg {
     constructor(svg, browserSource) {
         this.svg = svg;
@@ -132,7 +130,6 @@ class Svg {
     ;
 }
 exports.Svg = Svg;
-// tslint:disable-next-line: max-classes-per-file
 class SvgToImg {
     constructor(browserSource) {
         this.browserSource = browserSource;

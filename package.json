@@ -18,6 +18,9 @@
     "name": "Etienne Martin",
     "url": "http://etiennemartin.ca/"
   },
+  "contributors": [
+    "Philipp Katz (https://gitlab.com/qqilihq)"
+  ],
   "scripts": {
     "dev": "tsc --pretty --watch",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
@@ -102,6 +105,6 @@
     "typescript": "2.9.2"
   },
   "dependencies": {
-    "puppeteer": "1.1.1"
+    "puppeteer": "2.0.0"
   }
 }

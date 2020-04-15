@@ -28,7 +28,7 @@ export const stringifyFunction = (func: any, ...argsArray: any[]) => {
 
 export const writeFileAsync = async (path: string, data: Buffer) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(path, data, (err: Error) => {
+    fs.writeFile(path, data, (err: NodeJS.ErrnoException | null) => {
       if (err) { return reject(err); }
 
       resolve();
@@ -128,6 +128,14 @@ export const renderSvg = async (svg: string, options: {
     img.addEventListener("error", onError);
 
     document.body.appendChild(img);
-    img.src = "data:image/svg+xml;charset=utf8," + svg;
+    // need to supply this base64-encoded, otherwise
+    // we get the "Malformed SVG" error (see above)
+    // when running remotely via WebSocket connection;
+    // note that `btoa` only works on ASCII characters,
+    // that’s why we need the `unescape(encodeURIComponent(…))`
+    // workaround -- see here:
+    // https://stackoverflow.com/a/26603875
+    const base64Svg = btoa(unescape(encodeURIComponent(svg)));
+    img.src = "data:image/svg+xml;base64," + base64Svg;
   });
 };

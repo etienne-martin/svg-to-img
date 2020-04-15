@@ -25,7 +25,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("677e67f0c96c14a79032351d5691bcb2");
+    expect(md5(data)).toEqual("242fac8e57f2c24e6865733c78ffd49a");
   });
 
   test("From string to image", async () => {
@@ -38,7 +38,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("7c310bf3a7267c656d926ce5c8a1c365");
+    expect(md5(data)).toEqual("d7f42c771389e20ef07397ebcd3aa5ac");
   });
 
   test("Infer file type from file extension", async () => {
@@ -53,7 +53,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("677e67f0c96c14a79032351d5691bcb2");
+    expect(md5(data)).toEqual("242fac8e57f2c24e6865733c78ffd49a");
   });
 
   test("Unknown file extension", async () => {
@@ -68,7 +68,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("7c310bf3a7267c656d926ce5c8a1c365");
+    expect(md5(data)).toEqual("d7f42c771389e20ef07397ebcd3aa5ac");
   });
 
   test("Base64 encoded output", async () => {
@@ -81,7 +81,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("d8d4ae8a0824a579c7ca32a7ee93a678");
+    expect(md5(data)).toEqual("de0dcfb7ab63a50140c2ab562bd2d942");
   });
 
   test("HEX encoded output", async () => {
@@ -94,7 +94,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("dd8d4c070bb6db33ad15ace8dd56e61c");
+    expect(md5(data)).toEqual("492efd51b52dc7376343202ee67225ca");
   });
 
   test("JPEG compression", async () => {
@@ -107,7 +107,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("435447377ac681b187d8d55a65ea6b37");
+    expect(md5(data)).toEqual("2b6a20b486cf02671c13c0cb9e6bac1d");
   });
 
   test("WEBP compression", async () => {
@@ -120,7 +120,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("b5a88a19087b48e6aafacf688699ff0a");
+    expect(md5(data)).toEqual("aef2e325aa30cd0299ee95c56ff49b9c");
   });
 
   test("Custom width and height", async () => {
@@ -134,7 +134,7 @@ describe("SVG to image conversion", () => {
       width: 1000,
       height: 200
     });
-    expect(md5(data)).toEqual("35053a5b747abffa7cb1aba24bbbd603");
+    expect(md5(data)).toEqual("c683880ab02c0e76243d0abaceffe0c8");
   });
 
   test("Custom background color", async () => {
@@ -147,7 +147,7 @@ describe("SVG to image conversion", () => {
       width: 406,
       height: 206
     });
-    expect(md5(data)).toEqual("f7c37d538eb948f6609d15d871b3f078");
+    expect(md5(data)).toEqual("580c3453b5d102d5b06411c8a1fc4b23");
   });
 
   test("Malformed SVG", async () => {
@@ -168,7 +168,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("a35bb124b354bb861a6b65118ff16dde");
+    expect(md5(data)).toEqual("1b1fe94386407eecc2d083882aa73589");
   });
 
   test("Resize responsive SVG (Squashed)", async () => {
@@ -182,7 +182,7 @@ describe("SVG to image conversion", () => {
       width: 300,
       height: 100
     });
-    expect(md5(data)).toEqual("f6571224da1e85780c7dc0ea66b7c95c");
+    expect(md5(data)).toEqual("cf75cb874aad3174a90936c9b6454cf8");
   });
 
   test("Resize responsive SVG (Proportionally)", async () => {
@@ -195,7 +195,7 @@ describe("SVG to image conversion", () => {
       width: 300,
       height: 241
     });
-    expect(md5(data)).toEqual("1245ca2a1868e5148d0bbeacc0245d25");
+    expect(md5(data)).toEqual("6cd910ca5ebee7366cb6ec51da090b45");
   });
 
   test("SVG to PNG shorthand", async () => {
@@ -206,7 +206,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("a35bb124b354bb861a6b65118ff16dde");
+    expect(md5(data)).toEqual("1b1fe94386407eecc2d083882aa73589");
   });
 
   test("SVG to JPEG shorthand", async () => {
@@ -217,6 +217,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
+    fs.writeFileSync(`${outputDir}/da0a53cd944c1fbd56a64684969882cd.jpg`, data as Buffer);
     expect(md5(data)).toEqual("da0a53cd944c1fbd56a64684969882cd");
   });
 
@@ -228,7 +229,7 @@ describe("SVG to image conversion", () => {
       width: 187,
       height: 150
     });
-    expect(md5(data)).toEqual("b1080b283475987c0d57dd16a9f19288");
+    expect(md5(data)).toEqual("d7e682534f5118c62659afe5b13fe33e");
   });
 
   test("Clip the image", async () => {
@@ -246,7 +247,7 @@ describe("SVG to image conversion", () => {
       width: 100,
       height: 100
     });
-    expect(md5(data)).toEqual("68c1e882efb0a3ce1791e5a6e6b80bd7");
+    expect(md5(data)).toEqual("29f7cd260d1ceaa8aef7964e5f2f7ae0");
   });
 
   test("Wait for browser destruction", async (done) => {
@@ -273,6 +274,42 @@ describe("SVG to image conversion", () => {
       expect(errors).toBe(0);
       done();
     }, 1000);
+  });
+
+  test("Propagates error when cannot connect", async (done) => {
+    const convert = svgToImg.connect({ browserWSEndpoint: "ws://localhost:12345" })
+    try {
+      await convert.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+      done.fail();
+    } catch (error) {
+      expect(error.message).toContain("ECONNREFUSED");
+      done();
+    }
+  });
+
+  test("Propagates error when cannot connect with subsequent attempts", async (done) => {
+    const convert = svgToImg.connect({ browserWSEndpoint: "ws://localhost:12345" });
+    let errors = 0;
+    for (let i = 0; i < 10; i++) {
+      try {
+        await convert.from("<svg xmlns='http://www.w3.org/2000/svg'/>").toPng();
+        done.fail();
+      } catch (error) {
+        expect(error.message).toContain("ECONNREFUSED");
+        errors++;
+      }
+    }
+    expect(errors).toBe(10);
+    done();
+  });
+
+  test("Special character encoding", async (done) => {
+    try {
+      await svgToImg.from("<svg xmlns='http://www.w3.org/2000/svg'><text x='0' y='0'>äöüÄÖÜçéèñ</text></svg>").toPng();
+      done();
+    } catch (error) {
+      done.fail();
+    }
   });
 });
 

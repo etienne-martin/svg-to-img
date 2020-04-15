@@ -19,3 +19,9 @@ export interface IOptions {
 export interface IShorthandOptions extends IOptions {
   type?: never;
 }
+
+export interface IConnectOptions {
+  browserWSEndpoint?: string;
+  browserURL?: string;
+  ignoreHTTPSErrors?: boolean;
+}

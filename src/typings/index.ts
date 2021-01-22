@@ -1,3 +1,5 @@
+import { LaunchOptions } from "puppeteer";
+
 export interface IBoundingBox {
   x: number;
   y: number;
@@ -14,6 +16,7 @@ export interface IOptions {
   clip?: IBoundingBox;
   background?: string;
   encoding?: "base64" | "utf8" | "binary" | "hex";
+  puppeteer?: LaunchOptions;
 }
 
 export interface IShorthandOptions extends IOptions {

@@ -27,8 +27,8 @@ export const stringifyFunction = (func: any, ...argsArray: any[]) => {
 };
 
 export const writeFileAsync = async (path: string, data: Buffer) => {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(path, data, (err: Error) => {
+  return new Promise<void>((resolve, reject) => {
+    fs.writeFile(path, data, (err: NodeJS.ErrnoException | null) => {
       if (err) { return reject(err); }
 
       resolve();

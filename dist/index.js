@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.from = void 0;
 const puppeteer = require("puppeteer");
 const helpers_1 = require("./helpers");
 const constants_1 = require("./constants");
@@ -14,14 +15,14 @@ const executeQueuedRequests = (browser) => {
     // Clear items from the queue
     queue.length = 0;
 };
-const getBrowser = async () => {
+const getBrowser = async (options) => {
     return new Promise(async (resolve) => {
         clearTimeout(browserDestructionTimeout);
         if (browserState === "closed") {
             // Browser is closed
             queue.push(resolve);
             browserState = "opening";
-            browserInstance = await puppeteer.launch(constants_1.config.puppeteer);
+            browserInstance = await puppeteer.launch(Object.assign(Object.assign({}, constants_1.config.puppeteer), options));
             browserState = "open";
             return executeQueuedRequests(browserInstance);
         }
@@ -51,8 +52,8 @@ const scheduleBrowserForDestruction = () => {
 };
 const convertSvg = async (inputSvg, passedOptions) => {
     const svg = Buffer.isBuffer(inputSvg) ? inputSvg.toString("utf8") : inputSvg;
-    const options = Object.assign({}, constants_1.defaultOptions, passedOptions);
-    const browser = await getBrowser();
+    const options = Object.assign(Object.assign({}, constants_1.defaultOptions), passedOptions);
+    const browser = await getBrowser(passedOptions.puppeteer);
     const page = (await browser.pages())[0];
     // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
     await page.setOfflineMode(true);
@@ -92,20 +93,20 @@ const to = (svg) => {
 };
 const toPng = (svg) => {
     return async (options) => {
-        return convertSvg(svg, Object.assign({}, constants_1.defaultPngShorthandOptions, options));
+        return convertSvg(svg, Object.assign(Object.assign({}, constants_1.defaultPngShorthandOptions), options));
     };
 };
 const toJpeg = (svg) => {
     return async (options) => {
-        return convertSvg(svg, Object.assign({}, constants_1.defaultJpegShorthandOptions, options));
+        return convertSvg(svg, Object.assign(Object.assign({}, constants_1.defaultJpegShorthandOptions), options));
     };
 };
 const toWebp = (svg) => {
     return async (options) => {
-        return convertSvg(svg, Object.assign({}, constants_1.defaultWebpShorthandOptions, options));
+        return convertSvg(svg, Object.assign(Object.assign({}, constants_1.defaultWebpShorthandOptions), options));
     };
 };
-exports.from = (svg) => {
+const from = (svg) => {
     return {
         to: to(svg),
         toPng: toPng(svg),
@@ -113,3 +114,4 @@ exports.from = (svg) => {
         toWebp: toWebp(svg)
     };
 };
+exports.from = from;

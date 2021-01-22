@@ -16,7 +16,7 @@ const executeQueuedRequests = (browser: puppeteer.Browser) => {
   queue.length = 0;
 };
 
-const getBrowser = async (): Promise<puppeteer.Browser> => {
+const getBrowser = async (options?: puppeteer.LaunchOptions): Promise<puppeteer.Browser> => {
   return new Promise(async (resolve: (result: puppeteer.Browser) => void) => {
     clearTimeout(browserDestructionTimeout);
 
@@ -24,7 +24,10 @@ const getBrowser = async (): Promise<puppeteer.Browser> => {
       // Browser is closed
       queue.push(resolve);
       browserState = "opening";
-      browserInstance = await puppeteer.launch(config.puppeteer);
+      browserInstance = await puppeteer.launch({
+        ...config.puppeteer,
+        ...options
+      });
       browserState = "open";
 
       return executeQueuedRequests(browserInstance);
@@ -60,7 +63,7 @@ const scheduleBrowserForDestruction = () => {
 const convertSvg = async (inputSvg: Buffer|string, passedOptions: IOptions): Promise<Buffer|string> => {
   const svg = Buffer.isBuffer(inputSvg) ? (inputSvg as Buffer).toString("utf8") : inputSvg;
   const options = {...defaultOptions, ...passedOptions};
-  const browser = await getBrowser();
+  const browser = await getBrowser(passedOptions.puppeteer);
   const page = (await browser.pages())[0];
 
   // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network

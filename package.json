@@ -25,7 +25,7 @@
     "test": "jest src --coverage --verbose",
     "test:watch": "jest src --coverage --verbose --watch",
     "coverage": "coveralls < ./coverage/lcov.info",
-    "prebuild": "rm -rf dist/ && npm run lint",
+    "prebuild": "shx rm -rf dist/ && npm run lint",
     "build": "tsc --pretty",
     "prepare": "npm run build"
   },
@@ -95,6 +95,7 @@
     "jest": "22.4.4",
     "jest-canvas-mock": "1.1.0",
     "rimraf": "2.6.2",
+    "shx": "^0.3.3",
     "ts-jest": "22.4.6",
     "tslint": "5.11.0",
     "tslint-config-prettier": "1.17.0",

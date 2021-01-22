@@ -14,14 +14,14 @@ const executeQueuedRequests = (browser) => {
     // Clear items from the queue
     queue.length = 0;
 };
-const getBrowser = async () => {
+const getBrowser = async (options) => {
     return new Promise(async (resolve) => {
         clearTimeout(browserDestructionTimeout);
         if (browserState === "closed") {
             // Browser is closed
             queue.push(resolve);
             browserState = "opening";
-            browserInstance = await puppeteer.launch(constants_1.config.puppeteer);
+            browserInstance = await puppeteer.launch(Object.assign({}, constants_1.config.puppeteer, options));
             browserState = "open";
             return executeQueuedRequests(browserInstance);
         }
@@ -52,7 +52,7 @@ const scheduleBrowserForDestruction = () => {
 const convertSvg = async (inputSvg, passedOptions) => {
     const svg = Buffer.isBuffer(inputSvg) ? inputSvg.toString("utf8") : inputSvg;
     const options = Object.assign({}, constants_1.defaultOptions, passedOptions);
-    const browser = await getBrowser();
+    const browser = await getBrowser(passedOptions.puppeteer);
     const page = (await browser.pages())[0];
     // ⚠️ Offline mode is enabled to prevent any HTTP requests over the network
     await page.setOfflineMode(true);

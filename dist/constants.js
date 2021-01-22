@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultWebpShorthandOptions = exports.defaultJpegShorthandOptions = exports.defaultPngShorthandOptions = exports.defaultOptions = exports.config = void 0;
 exports.config = {
     supportedImageTypes: ["jpeg", "png", "webp"],
     jpegBackground: "#fff",

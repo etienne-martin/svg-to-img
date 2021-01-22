@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.renderSvg = exports.writeFileAsync = exports.stringifyFunction = exports.getFileTypeFromPath = void 0;
 const fs = require("fs");
-exports.getFileTypeFromPath = (path) => {
+const getFileTypeFromPath = (path) => {
     return path.toLowerCase().replace(new RegExp("jpg", "g"), "jpeg").split(".").reverse()[0];
 };
-exports.stringifyFunction = (func, ...argsArray) => {
+exports.getFileTypeFromPath = getFileTypeFromPath;
+const stringifyFunction = (func, ...argsArray) => {
     // Remove istanbul coverage instruments
     const functionString = func.toString().replace(/cov_(.+?)\+\+[,;]?/g, "");
     const args = [];
@@ -22,7 +24,8 @@ exports.stringifyFunction = (func, ...argsArray) => {
     }
     return `(${functionString})(${args.join(",")})`;
 };
-exports.writeFileAsync = async (path, data) => {
+exports.stringifyFunction = stringifyFunction;
+const writeFileAsync = async (path, data) => {
     return new Promise((resolve, reject) => {
         fs.writeFile(path, data, (err) => {
             if (err) {
@@ -32,7 +35,8 @@ exports.writeFileAsync = async (path, data) => {
         });
     });
 };
-exports.renderSvg = async (svg, options) => {
+exports.writeFileAsync = writeFileAsync;
+const renderSvg = async (svg, options) => {
     return new Promise((resolve, reject) => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -96,3 +100,4 @@ exports.renderSvg = async (svg, options) => {
         img.src = "data:image/svg+xml;charset=utf8," + svg;
     });
 };
+exports.renderSvg = renderSvg;

@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import { IOptions, IShorthandOptions } from "./typings";
-export declare const from: (svg: string | Buffer) => {
-    to: (options: IOptions) => Promise<string | Buffer>;
-    toPng: (options?: IShorthandOptions | undefined) => Promise<string | Buffer>;
-    toJpeg: (options?: IShorthandOptions | undefined) => Promise<string | Buffer>;
-    toWebp: (options?: IShorthandOptions | undefined) => Promise<string | Buffer>;
+export declare const from: (svg: Buffer | string) => {
+    to: (options: IOptions) => Promise<Buffer | string>;
+    toPng: (options?: IShorthandOptions | undefined) => Promise<Buffer | string>;
+    toJpeg: (options?: IShorthandOptions | undefined) => Promise<Buffer | string>;
+    toWebp: (options?: IShorthandOptions | undefined) => Promise<Buffer | string>;
 };
